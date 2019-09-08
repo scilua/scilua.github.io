@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua - LJSQLite3</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li class="active"><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li><a href="rclient.html">Rclient</a></li>
+                <li><a href="time.html">Time</a></li>
+                <li><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>LJSQlite3: SQlite3 Interface</h1>
+
+      <p>SQLite databases require no preliminary setup (installation and configuration or a database server), offer competitive performance and are portable as each database is fully contained in a single file. Additionally the <a href="http://www.sqlite.org/sqlite.html">command-line shell</a> can be used to facilitate common tasks. Thanks to all these features SQLite databases are ideal to store and manipulate scientific data. We refer to the <a href="http://sqlite.org">official documentation</a> for more information on SQLite.</p>
+
+      <p>Using the LJSQLITE3 library data can be conveniently exchanged between Lua and SQLite databases. Moreover arbitrary operations can be performed on SQLite databases directly from Lua:</p>
+
+<pre><code class="language-lua">
+local sql = require "ljsqlite3"
+local conn = sql.open("") -- Open a temporary in-memory database.
+ 
+-- Execute SQL commands separated by the ';' character:
+conn:exec[[
+CREATE TABLE t(id TEXT, num REAL);
+INSERT INTO t VALUES('myid1', 200);
+]]
+ 
+-- Prepared statements are supported:
+local stmt = conn:prepare("INSERT INTO t VALUES(?, ?)")
+for i=2,4 do
+  stmt:reset():bind('myid'..i, 200*i):step()
+end
+ 
+-- Command-line shell feature which here prints all records:
+conn "SELECT * FROM t"
+--> id    num
+--> myid1 200
+--> myid2 400
+--> myid3 600
+--> myid4 800
+ 
+local t = conn:exec("SELECT * FROM t") -- Records are by column.
+-- Access to columns via column numbers or names:
+assert(t[1] == t.id)
+-- Nested indexing corresponds to the record number:
+assert(t[1][3] == 'myid3')
+ 
+-- Convenience function returns multiple values for one record:
+local id, num = conn:rowexec("SELECT * FROM t WHERE id=='myid3'")
+print(id, num) --> myid3 600
+
+-- Custom scalar function definition, aggregates supported as well.
+conn:setscalar("MYFUN", function(x) return x/100 end)
+conn "SELECT MYFUN(num) FROM t"
+--> MYFUN(num)
+--> 2
+--> 4
+--> 6
+--> 8
+
+conn:close() -- Close stmt as well.
+</code></pre>
+
+      <h2>SQLite Type Mappings</h2>
+
+      <p>The <a href="http://www.sqlite.org/datatype3.html">SQLite datatypes</a> page is a recommended reading. Summarizing, each element can only be of SQLite type: NULL, REAL, TEXT, BLOB or INTEGER. The declared type of each table column at the moment a table is created only represents a preferred type and any element in any column is allowed to be of any of the 5 types above. Here we focus only on the conversions between Lua types and SQLite types.</p>
+
+      <p>In the case of insertions via (Lua string) commands nothing is required on Lua side: the input SQLite types are determined by parsing the command (for instance <code>1.53</code> would be a REAL, <code>1</code> an INTEGER, <code>'1.53'</code> a TEXT and <code>CAST('1.53' AS BLOB)</code> a BLOB).</p>
+
+      <p>However any of the <a href="#bind1">binding methods</a> involve a mapping from Lua types to SQLite types and the resulting SQLite type is used as input for the insertion. Moreover records returned from SELECT queries necessarily involve a mapping from SQLite types to Lua types. The following two tables list the mappings in both directions where a luablob is obtained by calling <code>sql.blob()</code>:</p>
+
+      <table class="table">
+        <caption>SQLite types &rarr; Lua types</caption>
+        <tr><th>Input</th><th>Output</th><th>Conversion</th></tr>
+        <tr><td>NULL</td><td>nil</td><td></td></tr>
+        <tr><td>REAL</td><td>numeric</td><td></td></tr>
+        <tr><td>TEXT</td><td>string</td><td>[UTF-16 &rarr; UTF-8]</td></tr>
+        <tr><td>BLOB</td><td>string</td><td></td></tr>
+        <tr><td>INTEGER</td><td>cdata&lt;int64_t&gt;</td><td></td></tr>
+      </table>
+
+      <table class="table" id="mapping-allowed">
+        <caption>Lua types &rarr; SQLite types</caption>
+        <tr><th>Input</th><th>Output</th><th>Conversion</th></tr>
+        <tr><td>nil</td><td>NULL</td><td></td></tr>
+        <tr><td>numeric</td><td>REAL</td><td></td></tr>
+        <tr><td>string</td><td>TEXT</td><td>[UTF-8 &rarr; UTF-16]</td></tr>
+        <tr><td>luablob</td><td>BLOB</td><td></td></tr>
+        <tr><td>cdata&lt;int64_t&gt;</td><td>INTEGER</td><td></td></tr>
+      </table>
+
+      <p>An empty conversion cell means that the data is mapped without modifications. For instance both Lua's numeric type and SQLite's REAL type refer to data represented by a floating-point double. The mapping between SQLite TEXT and Lua string involves a conversion between UTF-8 and UTF-16 text encodings in case the SQLite database has been configured to use UTF-16 encoding for TEXT storage. It's suggested to use databases configured as UTF-8 (the default) to avoid costly conversions.</p>
+
+      <p>Remember that a Lua string can store arbitrary data (plain text or binary data). In order to differentiate between SQLite TEXT and BLOB, where in the second case the content of the Lua string is always stored without text encoding modifications, the <code>sql.blob()</code> function can be called on the Lua string to return an object which forces the <a href="#bind1">binding methods</a> to threat the content of the Lua string as BLOB.</p>
+
+      <p>If the INTEGER &rarr; <code>cdata&lt;int64_t&gt;</code> mapping is not desired the following solutions can be considered:</p>
+
+      <ul>
+        <li>declare the type of the table column as REAL instead of INTEGER when creating the table (this works only for integers that can be stored in doubles, i.e. integers smaller in absolute value than 2^51);</li>
+        <li>use cast queries: <code>'SELECT CAST(the_integer AS REAL) ...'</code>;</li>
+      </ul>
+
+      <h2>API</h2>
+
+      <p>In the following <code>conn</code> is an instance of a connection object which represents one or multiple (see the <a href="http://www.sqlite.org/lang_attach.html">ATTACH DATABASE</a> command) connections to SQLite databases and <code>stmt</code> is an instance of a prepared statement: an object associated to a given <code>conn</code> which represents an SQLite command which has been prepared for later execution. It is mainly used to improve the efficiency of SQLite operations as the preparation phase can be as expensive as the execution phase and prepared statements can be reused (see the <code>stmt:reset()</code> method). Moreover <code>stmt</code> supports the <a href="#bind1">binding methods</a> which allow to more efficient insertion of Lua data in databases by skipping the conversion of such data to strings. Any SQLite command is represented by a Lua string. All <code>stmt</code>s which have been prepared by a <code>conn</code> always keep the <code>conn</code> alive as long as necessary.</p>
+
+      <h5 class="api">sql = require "ljsqlite3"</h5>
+
+      <p>Returns the loaded module (no global variable is set).</p>
+
+      <h5 class="api">conn = sql.open(filename, mode = "rwc")</h5>
+
+      <p>Opens a connection to the database specified by filename and returns a <code>conn</code> representing a connection to it. If <code>filename</code> is <code>""</code> then a temporary database is created in memory which is destroyed once <code>conn</code> is closed (or collected). The optional argument <code>mode</code> can be one the following:</p>
+
+      <ul>
+        <li><code>"ro"</code>: read only mode;</li>
+        <li><code>"rw"</code>: read and write mode;</li>
+        <li><code>"rwc"</code>: (default) read and write mode, creates the database if it does not exist.</li>
+      </ul>
+
+      <h5 class="api">luablob = sql.blob(str)</h5>
+
+      <p>Creates a luablob from its argument which must be of string type. It's only used in <a href="#bind1">binding methods</a> to distinguish between a string which represents text and one which represents binary data. The luablob wrapper makes sure that <code>str</code> is classified as an SQLite BLOB when passed to <a href="#bind1">binding methods</a>. A luablob object does not have any method associated with it and any operation on it (indexing, ...) is undefined. Example:</p>
+
+<pre><code class="language-lua">
+local conn = sql.open("") 
+conn:exec("CREATE TABLE t(x)")
+local stmt = conn:prepare("INSERT INTO t VALUES(?)")
+stmt:reset():bind("atext"):step()
+stmt:reset():bind(sql.blob("ablob")):step()
+conn "SELECT x, typeof(x) FROM t"
+--> x       typeof(x)
+--> atext   text
+--> ablob   blob
+</code></pre>
+
+      <h5 class="api">conn:close()</h5>
+
+      <p>Closes all the database connections associated with <code>conn</code>, closes all the <code>stmt</code>s associated with <code>conn</code> and un-registers all the scalar and aggregate custom functions associated with <code>conn</code>. It is an error to close <code>conn</code> more than once or to attempt any operation on a closed <code>conn</code> (the same holds for <code>stmt</code>s). Any <code>conn</code> is automatically closed if necessary when garbage collected.</p>
+
+      <h5 class="api">resultset, nrow = conn:exec(commands, get = "hik")</h5>
+
+      <p>Executes SQLite commands separated by the <code>';'</code> character (a trailing <code>';'</code> is fine and is ignored). For all the commands except the last one the method ignore any resulting record. If the last command results in an empty result set, i.e. it is not a SELECT query or it is a SELECT query which produces 0 records, then <code>nil, 0</code> is returned. Otherwise <code>nrow</code> is the number of records and <code>resultset</code> is a table whose structure depends on the value of the parameter <code>get</code>:</p>
+
+<pre><code class="language-lua">
+--[[ Suppose that the query returns data with the following layout:
+       |    colname[   1]   |   ...  |   colname[ncol]
+---------------------------------------------------------
+     1 | record[   1][   1] |   ...  | record[   1][ncol]
+     2 | record[   2][   1] |   ...  | record[   2][ncol]
+   ... |        ...         |   ...  |        ...      
+  nrow | record[nrow][   1] |   ...  | record[nrow][ncol]
+]]
+-- Then if get contains the character "h":
+resultset[   0] = { colname[   1], ..., colname[ncol] }
+-- If get contains the character "i":
+resultset[   1] = { record[   1][   1], ..., record[ncol][   1] }
+...
+resultset[nrow] = { record[   1][nrow], ..., record[ncol][nrow] }
+-- If get contains the character "k":
+resultset[colname[   1]] = resultset[   1]
+...
+resultset[colname[ncol]] = resultset[ncol]
+</code></pre>
+
+      <p>That is, the records are returned <strong>by column</strong> and are indexable using both the column numerical index and the column name. The method returns <code>nrow</code> as well because in case of NULL elements (which correspond to Lua nils) it would not be possible to determine the number of records resulting from the query. Examples of use:</p>
+
+<pre><code class="language-lua">
+local conn = sql.open("")
+-- Returns nil:
+conn:exec[[
+CREATE TABLE t(id TEXT, num REAL);
+INSERT INTO t VALUES('myid1', 200);
+]]
+-- Returns the resultset:
+local t = conn:exec("SELECT * FROM t")
+print(unpack(t[0]))      --> id    num
+print(t.id[1], t.num[1]) --> myid1 200
+print(t[1][1], t[2][1])  --> myid1 200
+-- Probably a user mistake, returns nil:
+local t = conn:exec[[
+SELECT * FROM t;
+INSERT INTO t VALUES('myid2', 400);
+]]
+assert(t == nil)
+</code></pre>
+
+      <h5 class="api">x_1, ..., x_ncol = conn:rowexec(command)</h5>
+
+      <p>Executes a single command which must return at most one record. If the query results in no records <code>nil</code> is returned. Otherwise ncol values are returned which corresponds to the columns of the single record. Example:</p>
+
+<pre><code class="language-lua">
+local conn = sql.open("")
+conn:exec[[
+CREATE TABLE t(id TEXT, num REAL);
+INSERT INTO t VALUES('myid1', 200);
+]]
+local id, num = conn:rowexec("SELECT * FROM t WHERE id=='myid1'")
+print(id, num) --> myid1 200
+</code></pre>
+
+      <h5 class="api">conn(commands, out = print)</h5>
+
+      <p>Executes SQLite commands separated by the <code>';'</code> character (a trailing <code>';'</code> is fine and is ignored) and passes all the records returned by all the commands preceded by the corresponding column names as strings to <code>out</code> (thus multiple parameters are passed to <code>out()</code> for each call). As <code>out</code> defaults to <code>print</code> this method mimics the <a href="http://www.sqlite.org/cli.html">Command Line Shell</a> by default. Example:</p>
+
+<pre><code class="language-lua">
+local conn = sql.open("")
+conn[[
+CREATE TABLE t(id TEXT, num REAL);
+INSERT INTO t VALUES('myid1', 200);
+INSERT INTO t VALUES('myid2', 400);
+SELECT * FROM t WHERE id=='myid1';
+SELECT * FROM t WHERE id=='myid2';
+]]
+--> id    num
+--> myid1 200
+--> id    num
+--> myid2 400
+</code></pre>
+
+      <h5 class="api">conn:setscalar(name, scalar); conn:setaggregate(name, initstate, step, final)</h5>
+
+      <p>These methods register scalar and aggregate functions to a specific connection only with the specified name. It is <strong>not</strong> an error to register both a scalar and an aggregate with the same name. The argument <code>name</code> should be a string and the remaining arguments callable entities (functions or tables/cdatas with the <code>__call()</code> metamethod defined) with the following signatures:</p>
+
+<pre><code class="language-lua">
+-- Called for each record where ... = record column elements:
+scalar    = function(...)        --> return mapping-allowed result
+-- Called to initialise the aggregate computation:
+initstate = function()           --> return state
+-- Called for each record where ... = record column elements;
+-- state is the persistent state of the computation:
+step      = function(state, ...) --> return nothing
+-- Called after all records has been passed to step;
+-- sate is the persistent state of the computation:
+final     = function(state)      --> return mapping-allowed result
+</code></pre>
+
+      <p>By mapping-allowed we mean that the return type must be one of the Lua types listed in the input column of table <a href="#mapping-allowed">Lua types &rarr; SQLite types</a>. For the aggregate case the state can be any Lua object, it's created by calling <code>initstate()</code> and is passed back for each record as first argument to <code>step()</code> and after that as the unique argument to <code>final()</code> which returns the result of the computation. There is no state for scalar functions as it is not needed. To clear a registered function (and free the <a href="http://luajit.org/ext_ffi_semantics.html#callback_resources">callback resource</a>) simply call the methods <code>conn:setscalar()</code> and <code>conn:setaggregate()</code> passing <code>name</code> as the only argument. Example:</p>
+
+ <pre><code class="language-lua">
+local conn = sql.open("")
+conn:exec "CREATE TABLE t(num REAL);"
+local stmt = conn:prepare("INSERT INTO t VALUES(?)")
+for i=1,4 do stmt:reset():bind(i):step() end
+conn:setscalar("MYSQRT", math.sqrt)
+conn "SELECT MYSQRT(num) FROM t"
+--> MYSQRT(num)
+--> 1
+--> 1.4142135623731
+--> 1.7320508075689
+--> 2
+conn:setscalar("MYSQRT") -- Free callback.
+conn:setaggregate("MYSUM",
+  function() return { sum = 0 } end,
+  function(self, x) self.sum = self.sum + x end,
+  function(self) return self.sum end
+)
+conn "SELECT MYSUM(num) FROM t"
+--> MYSUM(num)
+--> 10
+conn:setaggregate("MYSUM") -- Free callback.
+</code></pre>
+
+      <h5 class="api">stmt = conn:prepare(command)</h5>
+
+      <p>Creates a <code>stmt</code> associated to <code>conn</code> from a single SQLite command.</p>
+
+      <h5 class="api">stmt:close()</h5>
+
+      <p>Closes (finalizes) a <code>stmt</code>. It is an error to close a <code>stmt</code> more than once or to attempt any operation on a closed <code>stmt</code>. Any <code>stmt</code> is closed automatically if necessary when garbage collected.</p>
+
+      <h5 class="api">self = stmt:reset()</h5>
+
+      <p>Resets a <code>stmt</code> to its initial state (i.e. just after <code>conn:prepare()</code>) so that it's ready to be used again. Resetting a <code>stmt</code> that is already in its initial state is allowed and has no effect. Returns the <code>stmt</code> itself allowing chaining, see example in next definition below.</p>
+
+      <h5 class="api">row, colnames = stmt:step(row = {}, colnames = nil)</h5>
+
+      <p>If <code>stmt</code> is in its initial state (i.e. just returned from <code>conn:prepare()</code> or <code>stmt:reset()</code> has just been called) the command from which <code>stmt</code> has been prepared gets executed. The argument <code>row</code> defaults to an empty table. If no record results from the executed command nil is returned. Otherwise <code>row</code> is used to store the record elements indexed by their numeric index and returned as first return value. Moreover if <code>colnames</code> is not nil then <code>colnames</code> is used to store the column names indexed by their numeric index and it is returned as second return value (otherwise only one value is returned). Further calls to <code>step</code> will return all the records in the order they are returned by the SQLite command according to the rules defined in the previous paragraph. When there are no records left step will return <code>nil</code> and so will do further calls to step:</p>
+
+<pre><code class="language-lua">
+local conn = sql.open("")
+conn:exec[[
+CREATE TABLE t(id TEXT, num REAL);
+INSERT INTO t VALUES('myid1', 200);
+INSERT INTO t VALUES('myid2', 400);
+]]
+local stmt = conn:prepare("SELECT * FROM t")
+local row, names = stmt:step({}, {})
+print(unpack(names))
+print(unpack(row))
+while stmt:step(row) do
+  print(unpack(row))
+end
+--> id    num
+--> myid1 200
+--> myid2 400
+</code></pre>
+
+      <h5 class="api">resultset, nrecords = stmt:resultset(get = "hik", maxrecords = nil)</h5>
+
+      <p>This method behaves like <code>conn:exec()</code>: it returns the remaining records resulting from the command from which <code>stmt</code> has been prepared  according to the same rules of <code>conn:exec()</code> up to a maximum of <code>maxrecords</code> if <code>maxrecords</code> is not nil (otherwise all the remaining records are returned). Remark: for both <code>stmt:step()</code> and <code>stmt:resultset()</code> methods it may be useful to think of <code>stmt</code> as a file descriptor: we traverse the records (lines) from the first to the last:</p>
+
+<pre><code class="language-lua">
+local stmt = conn:prepare("SELECT * FROM some_table")
+while true do
+  -- Retrieve the records in chunks of maximum 1000 records.
+  local partial, nr = stmt:resultset(1000)
+    -- Do something with them ...
+  if not partial then break end -- Stop when no records left.
+end
+</code></pre>
+
+      <h5 class="api" id="bind1">self = stmt:bind1(i, value)</h5>
+
+      <p>This method has to be used with statements which have been prepared for later binding according to <a href="http://www.sqlite.org/lang_expr.html#varparam">SQLite parameters syntax</a>. Please notice that <strong>only</strong> parameters indexed by a numerical value are supported. <code>stmt:bind1()</code> binds a single mapping-allowed Lua value (i.e. in the input column of table <a href="#mapping-allowed">Lua types &rarr; SQLite types</a>) to the i-th parameter of the query. It is an error for <code>i</code> to be out of the allowed bounds. Any parameter which has not been binded is set to NULL. Binded parameters persist among multiple calls to <code>stmt:reset()</code> and <code>stmt:step()</code>: <code>stmt:clearbind()</code> must be used to set all the parameters back to NULL). Example:</p>
+
+<pre><code class="language-lua">
+local conn = sql.open("")
+conn:exec "CREATE TABLE t(r REAL, i INTEGER, s TEXT, b BLOB);"
+local stmt = conn:prepare "INSERT INTO t VALUES(?, ?, ?, ?)"
+stmt:reset():bind(1, 1, "astr", "astr"):step()
+stmt:reset():bind(2, 2, "bstr", sql.blob("bblob")):step()
+stmt:reset():step()
+stmt:reset():bind1(2, 4LL):step()
+stmt:reset():clearbind():bind1(2, 5LL):step()
+conn "SELECT * FROM t"
+--> r       i       s       b
+--> 1       1LL     astr    astr
+--> 2       2LL     bstr    bblob
+--> 2       2LL     bstr    bblob
+--> 2       4LL     bstr    bblob
+-->         5LL
+</code></pre>
+
+      <h5 class="api">self = stmt:bind(...)</h5>
+
+      <p>This method is equivalent to calling <code>stmt:bind1(i, v)</code> once for every passed argument where <code>i</code> is the position of the argument and <code>v</code> the argument itself. See example in <code>stmt:bind1()</code>.</p>
+
+      <h5 class="api">self = stmt:clearbind()</h5>
+
+      <p>Sets back all the parameters to NULL. See example in <code>stmt:bind1()</code>.</p>
+
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>

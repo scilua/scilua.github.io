@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua - Sci.PRNG</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li class="active"><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li><a href="rclient.html">Rclient</a></li>
+                <li><a href="time.html">Time</a></li>
+                <li><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>Sci.PRNG: Pseudo RNGs</h1>
+
+     <p>This module implements a number of pseudo random number generators (prngs) selected according to their efficiency and their satisfactory statistical properties:</p>
+
+      <table class="table">
+        <tr><th>Name</th><th>Period</th><th>Resolution</th></tr>
+        <tr><td><code>lfib4</code></td><td><code>2^287</code></td><td><code>2^32</code></td></tr>
+        <tr><td><code>kiss99</code></td><td><code>2^123</code></td><td><code>2^32</code></td></tr>
+        <tr><td><code>mrg32k3a</code></td><td><code>2^191</code></td><td><code>2^53</code></td></tr>
+      </table>
+
+      <p>Period indicates how many samples the prng is guaranteed to produce before starting to repeat the same sequence again. All the prng here implemented obtain uniform real numbers starting from integer numbers. Resolution indicates how many bits are used by the prng for these integer numbers. A higher resolution corresponds to a finer grid of possible real numbers on (0,1). In standard use cases a resolution higher than 2^32 is not needed.</p>
+
+      <p><a href="http://www.iro.umontreal.ca/~lecuyer/myftp/papers/testu01.pdf">Ecuyer07</a> provides an overview of many prngs including the ones provided by this module. The <a href="http://www.iro.umontreal.ca/~simardr/testu01/tu01.html">TestU01 library</a> has been used to assess the statistical properties of the prngs here implemented. More in detail, they all pass the most stringent battery of tests provided by the TestU01 library (big crush).</p>
+
+      <h2>API</h2>
+
+      <p>In the following <code>rng</code> represents a generic prng.</p>
+
+      <h5 class="api">u = rng:sample()</h5>
+
+      <p>Returns independent and identically distributed random numbers which are uniformly distributed over the interval (0,1) <strong>extremes excluded</strong>.</p>
+
+      <h5 class="api">rngcopy = rng:copy()</h5>
+
+      <p>Returns an independent copy of the prng which is initialized with the same state of <code>rng</code>. This means that both <code>rng</code> and <code>rngcopy</code> generate the same sequence of random numbers from this point onward. It allows for the re-use of the same sequence of random numbers multiple times without having to store them.</p>
+
+      <h5 class="api">str = tostring(rng)</h5>
+
+      <p>Returns a string representing a serialization of the <code>rng</code> state. It allows to persist the <code>rng</code> between multiple runs of a simulation by for instance saving the string state to a file.</p>
+
+      <h5 class="api">rng = prng.restore(str)</h5>
+
+      <p>Takes as input a string returned from a call to <code>tostring(rng)</code> and returns a <code>rng</code> initialized with such state.</p>
+
+      <h5 class="api">rng = prng.std()</h5>
+
+      <p>Default choice for a prng (chosen among the ones listed below) based on its efficiency and statistical properties. This should be the default choice for users who do not have a strong preference for any specific pseudo random number generators.</p>
+
+      <h5 class="api">rng = prng.lfib4()</h5>
+
+      <p>Returns a prng based on the lfib4 algorithm according to <a href="http://school.anhb.uwa.edu.au/personalpages/kwessen/shared/Marsaglia99.html">Marsaglia99</a>.</p>
+
+      <h5 class="api">rng = prng.kiss99()</h5>
+
+      <p>Returns a prng based on the kiss99 algorithm according to <a href="http://school.anhb.uwa.edu.au/personalpages/kwessen/shared/Marsaglia99.html">Marsaglia99</a>.</p>
+
+      <h5 class="api">rng = prng.mrg32k3a()</h5>
+
+      <p>Returns a prng based on the mrg32k3a parametrization according to <a href="http://www.iro.umontreal.ca/~lecuyer/myftp/papers/combmrg2.ps">Ecuyer99</a>.</p>
+      
+
+
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>

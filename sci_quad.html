@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua - Sci.Quad</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li class="active"><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li><a href="rclient.html">Rclient</a></li>
+                <li><a href="time.html">Time</a></li>
+                <li><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>Sci.Quad: Quadrature Algorithms</h1>
+
+      <p>This module implements algorithms for the numerical integration of real valued functions. For scalar functions the goal is to numerically evaluate the integral 
+      $$ I(f, a, b) = \int_{a}^{b}f(t)dt $$
+      where the integration interval is allowed to be unbounded.</p>
+
+      <h2>API</h2>
+
+      <h5 class="api">v, err = quad.dblexp(f, a, b, stop = 1e-6)</h5>
+
+      <p>Implements the double exponential quadrature algorithm described in <a href="http://crd-legacy.lbl.gov/~dhbailey/dhbpapers/dhb-tanh-sinh.pdf">Bailey06</a>. Takes as input the scalar integrand function <code>f</code>, the integration interval (<code>a</code>, <code>b</code>) and a positive value <code>stop</code>. The integration stops when the maximum number of integration points has been used or when doubling the number of integration points results in an absolute change in the numerical evaluation of the integral which is smaller than <code>stop</code>. The function returns the numerical evaluation of the integral and the last absolute change in such evaluation (which corresponds to the last doubling of the integration points).</p>
+
+      <p>The quadratic order of convergence in the number of integration points used requires <code>f</code> to be analytic over the integration interval and <code>f</code> is allowed to be unbounded on the extremes of integration. The double exponential method has been shown in <a href="http://crd-legacy.lbl.gov/~dhbailey/dhbpapers/quadrature.pdf">Bailey05</a> to be competitive with other numerical quadrature methods for most integrand functions.</p>
+      
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>

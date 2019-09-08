@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua - Rclient</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li class="active"><a href="rclient.html">Rclient</a></li>
+                <li><a href="time.html">Time</a></li>
+                <li><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>Rclient: LuaJIT Client for Rserve</h1>
+
+      <p>A library that allows to execute arbitrary <a href="http://www.r-project.org/">R</a> programs within LuaJIT. Being the most widely used language for statistical computing, R features a huge number of scientific libraries. Of particular relevance is the possibility to leverage on the plotting capabilities of <a href="http://had.co.nz/ggplot2/">ggplot2</a> and similar libraries:</p>
+  
+<pre><code class="language-lua">
+local R = require "rclient"
+ 
+local r = R.connect()
+ 
+-- Lua --> R:
+r.myvec  = { 1,2,3 } -- Array.
+r.mymat  = R.asmatrix({ {1,2,3},{4,5,6} })
+r.mylist = R.aslist({ 7,8,9 }, { "a","b","c" })
+r.mydf   = R.asdataframe({ 7,8,9 }, { "a","b","c" }, { "row1" })
+ 
+-- Execute R commands and evaluate expression as in R interpreter:
+r "myvec <- myvec^2"
+r "myvec" --> [1] 1 4 9
+
+-- R --> Lua:
+local vec  = r.myvec
+local mat  = r.mymat
+local list = r.mylist
+local df   = r.mydf
+print(unpack(vec))    --> 1 4 9
+print(unpack(mat[1])) --> 1 2 3
+print(unpack(mat[2])) --> 4 5 6
+print(unpack(list[0][1]))                 --> a b c
+print(list[1][1], list[2][1], list[3][1]) --> 7 8 9
+print(list.a[1],  list.b[1],  list.c[1] ) --> 7 8 9
+print(unpack(df[0][1]))             --> a b c
+print(unpack(df[0][2]))             --> row1
+print(df[1][1], df[2][1], df[3][1]) --> 7 8 9
+print(df.a[1],  df.b[1],  df.c[1] ) --> 7 8 9
+</code></pre>
+
+      <h2>RServe</h2>
+
+      <p>RCLIENT implements a client for <a href="http://www.rforge.net/Rserve/">Rserve</a> which is used to host a (local or remote) R session toward which a connection is established. The following R code, to be executed in a R session, installs Rserve and starts a local R session:</p>
+
+<pre><code class="language-r">
+install.packages("Rserve")
+library("Rserve")
+Rserve(args="--no-save")
+</code></pre>
+
+      <h2>R Types Crash Course</h2>
+
+      <p>In R almost every data structure is based on a <strong>R vector</strong> (also called generic vector). Conceptually a R vector is a sequence of elements of arbitrary type (including other R vectors). We say that a R object is <strong>atomic</strong> if it cannot be further decomposed into finer data structures. The following table lists the correspondences between R atomic type names and Lua type names:</p> 
+
+      <table class="table">
+        <tr><th>R Atomic Type</th><th>Lua Type</th></tr>
+        <tr><td>null</td><td>nil</td></tr>
+        <tr><td>numeric</td><td>number</td></tr>
+        <tr><td>integer</td><td>number</td></tr>
+        <tr><td>complex</td><td>cdata&lt;complex&gt;</td></tr>
+        <tr><td>logical</td><td>boolean</td></tr>
+        <tr><td>character</td><td>string</td></tr>
+      </table>
+
+      <p>We say that a R object is a <strong>R array</strong> if it is a R vector and and all its elements are atomics of the same type. A <strong>R scalar</strong> is a R array of length 1. R objects can have associated <strong>attributes</strong> which store metadata information. A <strong>R matrix</strong> is a R array with an attribute identifying the dimensions. A <strong>R list</strong> is a R vector of R vectors with an attribute identifying the column names. A <strong>R data.frame</strong> is a R vector of R vectors sharing the same length with attributes identifying the column names and the row names. This library allows the exchange between Lua and R of the following <strong>R aggregate</strong> types:</p>
+
+      <table class="table">
+        <tr><th>R Aggregate Type</th></tr>
+        <tr><td>array</td></tr>
+        <tr><td>matrix</td></tr>
+        <tr><td>list</td></tr>
+        <tr><td>data.frame</td></tr>
+      </table>
+
+      <p><strong>NOTE:</strong> no nesting is allowed for any of the R aggregate types (for instance a list of lists is not supported).</p>
+
+      <p><strong>NOTE:</strong> in the following we refer to "Lua table" for a generic Lua table, to "Lua table array" for a Lua table whose only keys are <code>1, ..., N</code> and to "Lua array" for a Lua table array whose elements are of the same type and correspond to a R atomic. This last data structure is the one that corresponds to a R array. Whenever a Lua array is expected a Lua scalar corresponding to a R atomic can be passed instead and this is equivalent to passing a Lua array of length 1.</p>
+
+      <h2>Data Exchange</h2>
+
+      <p>Objects are transfered from Lua to R via <a href="#newindex">set-variable</a> statements. The Lua object on the right hand side must be either <code>nil</code>, or a Lua array, or the object returned by one of the following functions: <code>asmatrix()</code>, <code>aslist()</code>, <code>asdataframe()</code>.</p>
+
+      <p>Objects are transfered from R to Lua via <a href="#index">get-variable</a> statements. The R object being indexed on the left hand side must be either a R atomic or a not nested R aggregate. A Lua table is always returned (unless the R object is <code>null</code>, in which case <code>nil</code> is returned) whose structure depends on the R type. The cases of R arrays and R matrices behave as expected: a Lua array or a Lua table array of Lua arrays is returned. Remember that R scalars really are R arrays of length 1. Otherwise:</p>
+
+<pre><code class="language-lua">
+local y = r.x -- r is a connection obtained via rclient.connect().
+
+-- If x is a list with N columns:
+y = { [0] = { [1] = column_names },
+      [1] = column_1_elements,
+      ...
+      [N] = column_N_elements,
+    }
+y[column_name_1] = y[1]
+...
+y[column_name_N] = y[N]
+
+-- If x is a data.frame with N columns:
+y = { [0] = { [1] = column_names, [2] = row_names },
+      [1] = column_1_elements,
+      ...
+      [N] = column_N_elements,
+    }
+y[column_name_1] = y[1]
+...
+y[column_name_N] = y[N]
+-- Please notice that here strings are automatically interpreted as factors, in 
+-- which case what is passed back to Lua are the numeric encodings (1, ..., N)
+-- associated with such factors. If this behavior is undesired please use the 
+-- "stringsAsFactors=FALSE" option when constructing data.frames on R side.
+</code></pre>
+
+      <h2>API</h2>
+
+      <p>In the following <code>r</code> is a connection to a R instance started by Rserve.</p>
+
+      <h5 class="api">rclient = require "rclient"</h5>
+
+      <p>Returns the loaded module (no global variable is set).</p>
+
+      <h5 class="api">r = rclient.connect(address = "localhost", port = 6311)</h5>
+
+      <p>Opens a connection to an instance of R started by Rserve and returns a connection object. The defaults result in a connection to a local instance of R started by Rserve in its default configuration. If the environment variable <code>LUA_EXEC</code> is set (as it is the case if using <a href="http://ulua.io">ULua</a>), the Rserve instance's working directory is set equal to it.</p>
+
+      <h5 class="api">r(rcode, out = print)</h5>
+
+      <p>Executes the string <code>rcode</code> and and passes the <strong>last</strong> result (if present) in string form to <code>out</code>. As <code>out</code> defaults to <code>print</code> this function mimics the R interpreter by default.</p>
+
+      <h5 class="api" id="newindex">r[variable] = x -- set-variable</h5>
+
+      <p>Sets the R variable named as <code>variable</code> (a string) to <code>x</code>.</p>
+
+      <h5 class="api">y = rclient.asmatrix(x)</h5>
+
+      <p>Returns an object which is interpreted on R side as a R matrix. The input <code>x</code> must be a Lua table array of Lua arrays sharing the same length and element type.</p>
+
+      <h5 class="api">y = rclient.aslist(x, colnames = { "X1", ..., "XN" })</h5>
+
+      <p>Returns an object which is interpreted on R side as a R list. The input <code>x</code> must be a Lua table array of Lua arrays. The input <code>colnames</code>, if present, must be a Lua table array of strings and have the same length of <code>x</code>.</p>
+
+      <h5 class="api">y = rclient.asdataframe(x, colnames = { "X1", ..., "XN" }, rownames = { "1", ..., "M" })</h5>
+
+      <p>Returns an object which is interpreted on R side as a data.frame. The input <code>x</code> must be a Lua table array of Lua arrays sharing the same length. The inputs <code>colnames</code> and <code>rownames</code>, if present, must be Lua table arrays of strings and have respectively the same length of <code>x</code> and of <code>x[1]</code>.</p>
+
+      <h5 class="api" id="index">x = r[variable] -- get-variable</h5>
+
+      <p>Returns an object which corresponds to the R variable named as <code>variable</code> (a string).</p>
+      
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>

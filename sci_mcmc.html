@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua - Sci.MCMC</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li class="active"><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li><a href="rclient.html">Rclient</a></li>
+                <li><a href="time.html">Time</a></li>
+                <li><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>Sci.MCMC: MCMC Algorithms</h1>
+
+      <p>This module implements Markov Chain Monte Carlo (MCMC) algorithms which are used to sample from a target density. All samplers operates on log-densities instead of densities both for efficiency and numerical stability reasons.</p>
+
+      <h2>API</h2>
+
+      <h5 class="api">theta1, eps1, invmass1 = mcmc.nuts(rng, f, theta0, options)</h5>
+
+      <p>Implements the No-U-Turn Sampler (NUTS) of <a href="http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf">Hoffman&amp;Gelman[13]</a>. This is an adaptive MCMC algorithm which belongs to the class of Hamiltonian Monte Carlo (HMC) samplers. As such the gradient of the log-density is required to carry out the simulation. The <a href="sci_diff.html">sci.diff</a> module allows for the gradient to be automatically computed without approximations with minimal user effort.</p>
+
+      <p>The algorithm is implemented according to the paper mentioned above but additionally a diagonal (or optionally dense) mass matrix is estimated during the adaptation phase to improve the performance of the sampler. Similar improvements have been implemented in the <a href="http://mc-stan.org/">Stan Project</a> implementation of NUTS.</p>
+
+      <p>The argument <code>rng</code> is a <a href="sci_prng.html">prng</a> object, the function <code>f(x, grad)</code> sets <code>grad</code> to the gradient of the log-density at <code>x</code> and returns the value of the log-density at <code>x</code>. Both <code>x</code> and <code>grad</code> must have the same length of <code>theta0</code> which is the starting value of the Markov Chain (adaptation phase). The log-density must evaluate to a finite value at <code>theta0</code>. The argument <code>options</code> is a table and the algorithm makes use of the following string keys (defaults in square brackets):</p>
+
+      <table class="table">
+        <tr><th>Key</th><th>Description</th></tr>
+        <tr><td>stopadapt</td><td>[1024] number of adaptation samples, 0 or power of 2 >= 64</td></tr>
+        <tr><td>stop</td><td>number of samples or function(theta)</td></tr>
+        <tr><td>olstat</td><td>on-line statistical estimators</td></tr>
+        <tr><td>mass</td><td>["diagonal"] can be "diagonal" or "dense"</td></tr>
+        <tr><td>eps</td><td>[rough guess] initial value for eps</td></tr>
+        <tr><td>cov</td><td>[nil] initial covariance: densemass^-1 (matrix)</td></tr>
+        <tr><td>var</td><td>[nil] initial variance: diagonalmass^-1 (vector)</td></tr>
+        <tr><td>delta</td><td>[0.8] for adaptation algorithm, see NUTS paper</td></tr>
+        <tr><td>gamma</td><td>[0.05] for adaptation algorithm, see NUTS paper</td></tr>
+        <tr><td>t0</td><td>[10] for adaptation algorithm, see NUTS paper</td></tr>
+        <tr><td>k</td><td>[0.75] for adaptation algorithm, see NUTS paper</td></tr>
+        <tr><td>dlmax</td><td>[1000] to cap tree growth, see deltamax in NUTS paper</td></tr>
+      </table>
+
+      <p>The Markov Chain is started at <code>theta0</code> and the adaptation takes place for the first <code>stopadapt</code> samples (<code>stopadadapt</code> may be <code>0</code>). Then the parameters determining the evolution of the Markov Chain are fixed and the sampling phase follows. If <code>stop</code> is a number then <code>stop</code> samples are drawn from the chain. If <code>stop</code> is a function, each drawn sample is passed to <code>stop</code> and the algorithm terminates when <code>stop</code> evaluates to <code>true</code>. In any case <code>olstat:push(theta)</code> is called for every drawn sample <code>theta</code> (samples from the adaptation phase are excluded). Using the on-line statistical accumulators of <code>sci.stat</code> allows to estimate statistics of the target distribution. When the algorithm terminates it returns: the last drawn sample, the adapted eps and the adapted inverse mass (variance vector if the mass is diagonal or covariance matrix if the mass is dense). Notice that this information allows to re-start the chain if so desired by passing these returned values in the <code>options</code> argument and setting <code>stopadapt</code> to <code>0</code>.</p>
+
+      <p>The <code>mass</code> option determines whether the algorithm uses a diagonal or dense mass matrix for the Hamiltonian dynamics. The <code>eps</code> option allows to provide an initial guess for the discretization step (otherwise a reasonable value is automatically determined). The options <code>cov</code> and <code>var</code> allows to specify an initial estimates for the mass matrix which is otherwise set equal to the identity matrix. We refer to the NUTS paper for the remaining options, the default values are perfectly adequate in most cases.</p>
+
+      <p>This example illustrates an use of <code>mcmc.nuts()</code> to sample from a simple bivariate density:</p>
+
+<pre><code class="language-lua">
+jit.opt.start("loopunroll=60") -- Set optimization flags:
+
+-- Load required modules:
+local math = require "sci.math".generic
+local diff = require "sci.diff"
+local alg  = require "sci.alg"
+local prng = require "sci.prng"
+local stat = require "sci.stat"
+local mcmc = require "sci.mcmc"
+
+local rng     = prng.std()
+local N       = 50000                -- 50000 samples (after adaptation).
+local theta0  = alg.tovec{ 0.5,0.5 } -- Starting value of chain.
+local mystat  = stat.olcov(2)        -- Compute mean and covariance.
+
+-- Logarithm of target density:
+local function logpdf(x)
+  return 2*math.log(x[1]) - x[1]*x[2]^2 - x[2]^2 + 2*x[2] - 4*x[1]
+end
+-- Automatic gradient computation (vector of 2 elements):
+local dlogpdf = diff.gradientf(logpdf, 2)
+
+local start = os.clock() -- To time the simulation.
+mcmc.nuts(rng, dlogpdf, theta0, {
+  stop   = N,
+  olstat = mystat,
+})
+local mu, sig = alg.vec(2), alg.mat(2, 2)
+mystat:mean(mu) -- Compute mean of target density.
+mystat:cov(sig) -- Compute covariance of target density.
+local time = os.clock() - start
+
+print("mean:")
+print(mu:width())
+print("covariance:")
+print(sig:width())
+--> mean:
+--> +0.650281,+0.637480
+--> covariance:
+--> +0.159994,-0.052265
+--> -0.052265,+0.338427
+
+print("CPU secs:", time) --> 1/4 of a second here with LuaJIT 2.1.
+</code></pre>
+
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>

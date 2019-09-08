@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua - Xsys</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li><a href="rclient.html">Rclient</a></li>
+                <li><a href="time.html">Time</a></li>
+                <li class="active"><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>Xsys: Extended Lua System</h1>
+
+      <p>A module that provides a small number of general purpose routines and extends the global <code>table</code> and <code>string</code> modules.</p>
+
+      <h2>API - Generic</h2>
+
+      <h5 class="api">xsys = require "xsys"</h5>
+
+      <p>Returns the loaded module (no global variable is set).</p>
+
+      <h5 class="api">y = xsys.tonumber(x)</h5>
+
+      <p>Checks if <code>x.__tonumber</code> is defined in which case it returns <code>x:__tonumber()</code>, otherwise it returns the global <code>tonumber(x)</code>.</p>
+
+      <h5 class="api">templatef = xsys.template(str)</h5>
+
+      <p>This function is <code>templet.loadstring()</code> from <a href="http://colberg.org/lua-templet/">Peter Colberg's Templet library</a> which is embedded in this module (version 1.0.1). We refer to the official website for further documentation. Here is an example of dynamic C-code generation:</p>
+
+<pre><code class="language-lua">
+local dynamic = xsys.template[[
+for (int i = 0; i < ${nparticle}; ++i) {
+|for i = 1, #coord do
+  r[i].${coord[i]} = r[i].${coord[i]} + v[i].${coord[i]} * ${timestep};
+|end
+}
+]]
+print(dynamic({ coord = { "x", "y", "z" }, nparticle = 500, timestep = 0.001 }))
+--> for (int i = 0; i < 500; ++i) {
+-->   r[i].x = r[i].x + v[i].x * 0.001;
+-->   r[i].y = r[i].y + v[i].y * 0.001;
+-->   r[i].z = r[i].z + v[i].z * 0.001;
+--> }
+</code></pre>
+
+      <h5 class="api">... = xsys.exec(chunk, chunkname, fenv)</h5>
+
+      <p>On success, this function is equivalent to executing the following chunk of code:</p>
+
+<pre><code class="language-lua">
+local f = loadstring(chunk, chunkname)
+if fenv then
+  setfenv(f, fenv)
+end
+return f()
+</code></pre>
+
+      <p>Otherwise, in case <code>loadstring()</code> returns an error message or <code>f()</code> raises an error then an appropriate error message is thrown.</p>
+
+      <h5 class="api">v1, v2, ..., vN = xsys.from(t, "k1, k2, ..., kN")</h5>
+
+      <p>This function is equivalent to executing the following chunk of code:</p>
+
+<pre><code class="language-lua">
+local v1, v2, ..., vN = t.k1, t.k2, ..., t.kN
+</code></pre>
+
+      <p>The advantage is purely cosmetic as using this function it's possible to easily 'import' module variables by copy&amp;paste:</p>
+
+<pre><code class="language-lua">
+local exp, log, sqrt, cos, sin, min, max, sqrt = xsys.from(math, 
+     "exp, log, sqrt, cos, sin, min, max, sqrt")
+</code></pre>
+
+      <p>Please notice that this function is not optimized for performance.</p>
+
+      <h2>API - Table</h2>
+
+      <p>Extension: <code>xsys.table</code> extends the global <code>table</code> library, i.e. it's guaranteed to contain all its entries.</p>
+
+      <h5 class="api">newtable = xsys.table.union(...)</h5>
+
+      <p>All passed arguments must be tables (passing no arguments is allowed). Returns a new table which maps from the union of the keys, which must be unique among all passed arguments, to the corresponding values. The keys of each of the passed arguments are iterated via <code>pairs()</code>. Example:</p>
+
+<pre><code class="language-lua">
+local t = table.union({ a = 1, b = 2 }, { [8] = "red", [9] = "blue" })
+for k,v in pairs(t) do print(k, v) end
+--> b 2
+--> 8 red
+--> a 1
+--> 9 blue
+</code></pre>
+
+      <h5 class="api">newarray = xsys.table.append(...)</h5>
+
+      <p>All the passed arguments must be table arrays, i.e. a table for which all the values from <code>1</code> to the result of the <code>#</code> operator are not <code>nil</code> (passing no arguments is allowed). Returns a new table array which is constructed by appending all the values corresponding to the array part of all the passed arguments which are iterated via the indexing <code>[i]</code> and length <code>#</code> operators. Example:</p>
+
+<pre><code class="language-lua">
+local t = table.append({ 1, 2, 3, a = 1 }, { 4, 5 })
+for _,v in ipairs(t) do print(v) end
+--> 1
+--> 2
+--> 3
+--> 4
+--> 5
+print(t.a) --> nil
+</code></pre>
+
+      <h2>API - String</h2>
+
+      <p>Extension: <code>xsys.string</code> extends the global <code>string</code> library, i.e. it's guaranteed to contain all its entries.</p>
+
+      <h5 class="api">splitted = xsys.string.split(str, sep)</h5>
+
+      <p>Splits the string <code>str</code> into the table array <code>splitted</code> according to the separator <code>sep</code>. Example:</p>
+
+<pre><code class="language-lua">
+for _,v in ipairs(xsys.string.split("aa,bb,cc,dd", ",")) do 
+  print(v) 
+end
+--> aa
+--> bb
+--> cc
+--> dd
+</code></pre>
+
+      <h5 class="api">trimmed = xsys.string.trim(str)</h5>
+
+      <p>Removes any sequence of white-spaces from the beginning and from the end of <code>str</code>. Example:</p>
+
+<pre><code class="language-lua">
+local totrim = "  LuaJIT "
+print("<"..totrim..">")                   --> <  LuaJIT >
+print("<"..xsys.string.trim(totrim)..">") --> <LuaJIT>
+</code></pre>
+
+      <h5 class="api">fixstr = xsys.string.width(x, nchars = 9)</h5>
+
+      <p>Returns a string with a fixed length equal to <code>nchars</code> characters (at least <code>9</code>) representing <code>x</code> which must be of one of the following: a <code>nil</code>, a <code>boolean</code>, a <code>string</code>, a <code>number</code>, or either a <code>table</code> or an FFI <code>cdata</code> with a <code>__tostring()</code> member method defined which returns a <code>number</code>. The fixed length is achieved via right-justification or truncation depending on the case. The rules that determine the output are best illustrated via an example:</p>
+
+<pre><code class="language-lua">
+local width = xsys.string.width
+-- Nil
+print(width())
+print(width(nil))
+-->      nil
+-->      nil
+-- Boolean:
+print(width(true))
+print(width(false))
+-->     true
+-->    false
+-- Strings:
+print(width("12345"))
+print(width("123456789"))
+print(width("1234567890"))
+-->     12345
+--> 123456789
+--> 1234567..
+-- Numbers / with __tonumber():
+print(width(10))
+print(width(-10))
+print(width(999999))
+print(width(9999999))
+print(width(0.000001))
+print(width(0.0000001))
+print(width(-1/0))
+print(width(0/0))
+--> +10.00000
+--> -10.00000
+--> +999999.0
+--> +1.0e+007
+--> +0.000001
+--> +1.0e-007
+-->      -inf
+-->       nan
+</code></pre>
+      
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>

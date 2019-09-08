@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua -  Sci.Dist</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li class="active"><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li><a href="rclient.html">Rclient</a></li>
+                <li><a href="time.html">Time</a></li>
+                <li><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>Sci.Dist: Statistical Distributions</h1>
+
+      <p>In the following <code>sd</code> represents a generic one-dimensional statistical distribution. We loosely refer to <code>sd</code> for random variables distributed according to <code>sd</code>. Each <code>sd</code> has associated parameters which may be required to satisfy numerical constraints. If such constraints are violated an error is thrown.</p>
+    
+      <h2>API</h2>
+
+      <h5 class="api">xl, xu = sd:range()</h5>
+      <p>Returns the minimum and the maximum possible theoretical values (infinite values allowed) assumed by <code>sd</code>.</p>
+        
+      <h5 class="api">v = sd:sample(rng)</h5>
+      <p>The argument to the function must be a <a href="sci_prng.html">prng</a> or a <a href="sci_qrng.html">qrng</a> object. In the first case the function generates independent and identically distributed random numbers according to the law of <code>sd</code>. In the second case the function returns samples which uniformly cover the range of sd according to the law of <code>sd</code>. Please notice that some statistical distributions do <strong>not</strong> support sampling via a qrng, in which case this fact is noted in the relevant documentation.</p>
+     
+      <h5 class="api">y = sd:pdf(x)</h5>
+      <p>Returns the value of the probability density function (for continuous distributions) or of the mass probability function (for discrete distributions) computed at <code>x</code> for <code>sd</code>. The domain of this function is the real line.</p>
+      
+      <h5 class="api">y = sd:logpdf(x)</h5>
+      <p>Returns the value of the natural logarithm of <code>sd:pdf()</code>. It is preferable to use this function instead of <code>math.log(sd:pdf(x))</code>. The domain of this function is the real line.</p>
+    
+      <h5 class="api">mean = sd:mean()</h5>
+      <p>Returns the mean of <code>sd</code>. Returns an infinite number where appropriate or a <code>nan</code> number if the mean does not exist.</p>
+     
+      <h5 class="api">var = sd:var()</h5>
+      <p>Returns the variance of <code>sd</code>. Returns an infinite number where appropriate or a <code>nan</code> number if the variance does not exist.</p>
+    
+      <h5 class="api">sdcopy = sd:copy()</h5>
+      <p>Returns an independent copy of <code>sd</code> which is initialized with the same parameters of <code>sd</code>.</p>
+    
+      <h5 class="api">sd = dist.uniform(\( \boldsymbol{a} \), \( \boldsymbol{b} \))</h5>
+      <p>Constraint: \( a &lt; b \). Returns a continuous uniform distribution which is characterized by the pdf: 
+      $$ f(x) = \frac{1}{b - a}, \quad x\in(a,b) $$
+      </p>
+    
+      <h5 class="api">sd = dist.exponential(\( \boldsymbol{\lambda} \))</h5>
+      <p>Constraint: \( \lambda &gt; 0 \). Returns a continuous exponential distribution which is characterized by the pdf: 
+      $$ f(x) = \lambda e^{-\lambda x}, \quad x\in(0,+\infty) $$
+      </p>
+    
+      <h5 class="api">sd = dist.normal(\( \boldsymbol{\mu} \), \( \boldsymbol{\sigma} \))</h5>
+      <p>Constraint: \( \sigma &gt; 0 \). Returns a continuous normal (Gaussian) distribution which is characterized by the pdf: 
+      $$ f(x) = \frac{1}{\sqrt{2\pi}\sigma}\exp{\{-\frac{(x - \mu)^2}{2\sigma^2}\}}, \quad x\in(-\infty,+\infty) $$
+      </p>
+    
+      <h5 class="api">sd = dist.lognormal(\( \boldsymbol{\mu} \), \( \boldsymbol{\sigma} \))</h5>
+      <p>Constraint: \( \sigma &gt; 0 \). Returns a continuous log-normal distribution which is characterized by the pdf: 
+      $$ f(x) = \frac{1}{\sqrt{2\pi}\sigma x}\exp{\{-\frac{(\ln{x} - \mu)^2}{2\sigma^2}\}}, \quad x\in(0,+\infty) $$
+      </p>
+      
+      <h5 class="api">sd = dist.student(\( \boldsymbol{\nu} \))</h5>
+      <p>Constraint: \( \nu &gt; 0 \). Returns a continuous student's t-distribution which is characterized by the pdf: 
+      $$ f(x) = \frac{1}{\sqrt{\nu}\text{B}\left(\frac{1}{2},\frac{\nu}{2}\right)}\left(1 + \frac{x^2}{2}\right)^{-\frac{\nu + 1}{2}}, \quad x\in(-\infty,+\infty) $$ 
+      where \( \text{B} \) is the <a href="sci_math.html#beta">beta function</a>.</p>
+    
+      <h5 class="api">sd = dist.gamma(\( \boldsymbol{\alpha} \), \( \boldsymbol{\beta} \))</h5>
+      <p>Constraint: \( \alpha &gt; 0 \) and \( \beta &gt; 0 \). Returns a continuous gamma distribution with shape parameter \( \alpha \) and <strong>rate</strong> parameter \( \beta \) which is characterized by the pdf:
+      $$ f(x) = \frac{\beta^\alpha}{\Gamma(\alpha)}x^{\alpha-1}e^{-\beta x}, \quad x\in(0,+\infty) $$ 
+      where \( \Gamma \) is the <a href="sci_math.html#gamma">gamma function</a>. This distribution does <strong>not</strong> allow sampling via a <a href="sci_qrng.html">qrng</a>.</p>
+    
+      <h5 class="api">sd = dist.beta(\( \boldsymbol{\alpha} \), \( \boldsymbol{\beta} \))</h5>
+      <p>Constraint: \( \alpha &gt; 0 \) and \( \beta &gt; 0 \). Returns a continuous beta distribution which is characterized by the pdf: 
+      $$ f(x) = \frac{1}{\text{B}(\alpha,\beta)}x^{\alpha-1}(1-x)^{\beta-1}, \quad x\in(0,1) $$ 
+      where \( \text{B} \) is the <a href="sci_math.html#beta">beta function</a>. This distribution does <strong>not</strong> allow sampling via a <a href="sci_qrng.html">qrng</a></p>.
+    
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>

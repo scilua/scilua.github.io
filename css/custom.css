@@ -1,0 +1,48 @@
+.container-fluid {
+  max-width: 860px;
+}
+body { 
+  padding-top: 70px; /* Avoid navbar overlapping */
+}
+h1 {
+  text-align: center;
+  padding-top: 30px; /* Avoid cramped sections */
+  padding-bottom: 60px;
+}
+h2 {
+  padding-top: 20px; /* Avoid cramped sections */
+}
+h5 {
+  margin-top: 25px; /* Avoid cramped sections */
+}
+.footer { /* Custom footer style */
+  margin-top: 50px;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-top-color: #EEEEEE;
+  border-bottom-color: #EEEEEE;
+  padding: 7px 7px; /* So footer height is 50px as navbar */
+}
+.jumbotron p { /* Avoid lightening of standard text */
+  font-weight: 400;
+}
+.api {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-weight: normal;
+  font-size: 13.5px;
+  line-height: 20.25px;
+  color: inherit;
+  display: inline-block;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+.api:before {
+  font-family: FontAwesome;
+  content: "\f0a9";
+  display: inline-block;
+  padding-right: 10px;
+  padding-left: 5px;
+  vertical-align: middle;
+}

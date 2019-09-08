@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua - Time</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li><a href="rclient.html">Rclient</a></li>
+                <li class="active"><a href="time.html">Time</a></li>
+                <li><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>Time: Dates and Periods in Lua</h1>
+
+      <p>A module for the manipulation of dates and periods according to the <a href="http://en.wikipedia.org/wiki/Gregorian_calendar">Gregorian calendar</a>.</p>
+
+      <p>Concepts and features:</p>
+
+      <ul>
+        <li><code>date</code>: a specific point in time (yesterday at 3:00 PM)</li>
+        <li><code>period</code>: a duration of time (3 hours)</li>
+        <li>microsecond (1-millionth of a second) precision</li>
+        <li>leap years are taken into account</li>
+        <li>leap seconds <strong>not</strong> taken into account</li>
+      </ul>
+
+<pre><code class="language-lua">
+local time = require "time"
+
+local d1 = time.date(2012, 4, 30) -- A date at 00:00 AM.
+
+-- Arithmetic operators are supported:
+local p1 = time.hours(13) + time.minutes(30) -- A period.
+local d2 = d1 + p1 -- The same date above at 1:30 PM.
+assert(d2 - d1 == p1)
+
+-- To / from strings, same functionality for periods:
+local datestr = "2012-04-30T13:30:00.000000"
+local d3 = time.todate(datestr)
+assert(d2 == d3)
+assert(tostring(d2) == datestr)
+
+-- Comparison operators are supported:
+assert(time.minutes(1) == time.seconds(60))
+assert(time.minutes(1) >  time.seconds(59))
+assert(d2 > d1)
+
+print(time.nowlocal()) -- Now, according to local clock.
+print(time.nowutc())   -- Now, according to UTC clock.
+
+time.sleep(time.seconds(1)) -- Sleep for 1 second.
+</code></pre>
+
+      <p>This module is based on Claus Tøndering's <a href="http://www.tondering.dk/main/index.php/calendar-information">calendar algorithms</a> and the corresponding C implementation.</p>
+
+      <h2>Validity of Dates and Periods</h2>
+
+      <p>The year component of each date must belong to the range [1582, 9999] and all dates must be valid (for example 2012-02-31 is not). If these conditions are not satisfied an error is thrown.</p>
+
+      <p>Attempts to construct periods outside of the supported range [-290000 years, +290000 years] yield undefined results. No attempt is made to detect such mistakes.</p>
+
+      <h2>Indexing, Operators and Reversibility</h2>
+
+      <p>All comparisons operator are supported and both sides of a given relation must either be dates or periods (it is an error to compare a date with a period).</p>
+
+      <p>The following table list the supported arithmetic operators, the resulting objects and whether the operators are reversible (more on this after the table). By <code>integer</code> we refer to a Lua number with no fractional part and by <code>months</code> and <code>years</code> we refer to the objects obtained by calls to <code>time.months()</code> and <code>time.years()</code>.</p>
+
+      <table class="table">
+        <tr><th>Operation</th><th>Result</th><th>Reversible</th><th>Note</th></tr>
+        <tr><td><code>period &plusmn; period</code></td><td><code>period</code></td><td>yes</td><td>commutative</td></tr>
+        <tr><td><code>period * integer</code></td><td><code>period</code></td><td>yes</td><td>commutative</td></tr>
+        <tr><td><code>integer * period</code></td><td><code>period</code></td><td>yes</td><td>commutative</td></tr>
+        <tr><td><code>period / integer</code></td><td><code>period</code></td><td>no</td><td></td></tr>
+        <tr><td><code>period / period</code></td><td><code>number</code></td><td>no</td><td>fraction</td></tr>
+        <tr><td><code>-period</code></td><td><code>period</code></td><td>yes</td><td></td></tr>
+        <tr><td><code>date &plusmn; period</code></td><td><code>date</code></td><td>yes</td><td></td></tr>
+        <tr><td><code>date &plusmn; months</code></td><td><code>date</code></td><td>no (yes if day &le; 28)</td><td></td></tr>
+        <tr><td><code>date &plusmn; years</code></td><td><code>date</code></td><td>no (yes if day &le; 28)</td><td></td></tr>
+      </table>
+
+      <p>By reversibility we mean being able perform the inverse operation and get back the starting value:</p>
+
+<pre><code class="language-lua">
+local startp = time.seconds(13)
+assert(startp == (startp + time.minutes(12)) - time.minutes(12))
+assert(startp == (startp * 3) / 3)
+assert(startp == -(-startp))
+
+local startd = time.date(2012, 3, 3)
+assert(startd == (startd - time.days(65)) + time.days(65))
+</code></pre>
+
+      <p>This behavior is not guaranteed for divisions and for shifts by months or years. When performing such shifts, if the day exceeds the end of month of the resulting date (which makes the resulting date not valid) a cap is applied equal to the end of month itself. Examples:</p>
+
+<pre><code class="language-lua">
+local startp = time.microseconds(13)
+assert(startp ~= (startp / 2) * 2)
+print(time.date(2012, 1, 31) + time.months(1)) -- 2012-02-29
+</code></pre>
+
+      <h2>API</h2>
+
+      <p>In the following we report the interface of the module. For brevity considerations <code>p</code> refers to an instance of a period and <code>d</code> to an instance of a date. We say that hours, minutes, seconds and microseconds are normalized when they belong respectively to the following ranges: &plusmn;23, &plusmn;59, &plusmn;59, &plusmn;999999. Normalization is achieved by increasing as much as required bigger count units. For instance 129 seconds is normalized to 2 minutes and 9 seconds.</p>
+
+      <h5 class="api">time = require "time"</h5>
+
+      <p>Returns the loaded module (no global variable is set).</p>
+
+      <h5 class="api">p = time.weeks|days|hours|minutes|seconds|milliseconds|microseconds(n)</h5>
+
+      <p>Constructs a period, all the arguments must be integers</p>
+
+      <h5 class="api">p = time.period(hours = 0, minutes = 0, seconds = 0, microseconds = 0)</h5>
+
+      <p>Equivalent to constructing the period by calling each corresponding constructor function and argument (for example <code>minutes = 3</code> corresponds to <code>time.minutes(3)</code>) and by taking the sum.</p>
+
+      <h5 class="api">str = tostring(p)</h5>
+
+      <p>Returns the string representation of a period, which follows the format <code>hours:mm:ss.ffffff</code> where <code>hours</code> represents the number of hours and occupies 1 or more characters. For the remaining part of the string the number of repetitions of the same character specifies the number of characters used by a given <strong>normalized</strong> field: <code>m</code> for minutes, <code>s</code> for seconds, <code>f</code> for microseconds.</p>
+
+      <h5 class="api">p = time.toperiod(str or int64)</h5>
+
+      <p>The argument must be a string or a <code>cdata&lt;int64_t&gt;</code>. In the first case it constructs a period from its string representation which must follow the format above. In the second case the period is constructed considering the argument as the <strong>total</strong> (unnormalized) number of microseconds.</p>
+
+      <h5 class="api">n = p:hours|minutes|seconds|microseconds()</h5>
+
+      <p>Returns the number of <strong>normalized</strong> units for each period component.</p>
+
+      <h5 class="api">h, m, s, i = p:parts()</h5>
+
+      <p>Returns <code>p:hours(), p:minutes(), p:seconds(), p:microseconds()</code>.</p>
+
+      <h5 class="api">f = p:tohours|tominutes|toseconds|tomilliseconds|tomicroseconds()</h5>
+
+      <p>Converts the period to the requested fractional units as Lua numbers. Note that <code>p:tomicroseconds()</code> is not equivalent to <code>p:ticks()</code> as the latter returns a <code>cdata&lt;int64_t&gt;</code>.</p>
+
+      <h5 class="api">int64 = p:ticks()</h5>
+
+      <p>Returns a <code>cdata&lt;int64_t&gt;</code> representing the <strong>total</strong> number of microseconds composing the period.</p>
+
+      <h5 class="api">time.sleep(p)</h5>
+
+      <p>Wait for a period <code>p</code>, which must represent a nonnegative amount of time, before continuing execution.</p>
+
+      <h5 class="api">years = time.years(n)</h5>
+
+      <p>Returns an object representing <code>n</code> years, where <code>n</code> must be an integer number. It is only used to shift dates via the <code>+</code> and <code>-</code> operators. No other operation is supported for this object.</p>
+
+      <h5 class="api">months = time.months(n)</h5>
+
+      <p>Returns an object representing <code>n</code> months, where <code>n</code> must be an integer number. It is only used to shift dates via the <code>+</code> and <code>-</code> operators. No other operation is supported for this object.</p>
+
+      <h5 class="api">d = time.date(year, month, day)</h5>
+
+      <p>Constructs a date at 00:00 AM (i.e. at the beginning of the given day) from the combination <code>year</code>, <code>month</code>, <code>day</code>. Dates corresponding to different times of the day are easily obtained by summing the returned value to appropriate periods.</p>
+
+      <h5 class="api">d = time.nowlocal()</h5>
+
+      <p>Returns a date representing the local time at the moment of the call: it takes into account the time zone and the eventual daylight saving adjustment.</p>
+
+      <h5 class="api">d = time.nowutc()</h5>
+
+      <p>Returns a date representing the the UTC time at the moment of the call: it does <strong>not</strong> take into account the time zone and the eventual daylight saving adjustment. It's potentially more precise and efficient than <code>time.nowlocal()</code>.</p>
+
+      <h5 class="api">str = tostring(d)</h5>
+
+      <p>Returns the string representation of a date, which follows the format <code>YYYY-MM-DDThh:mm:ss.ffffff</code> where the number of repetitions of the same character specifies the number of characters used by a given (eventually) <strong>normalized</strong> field: <code>Y</code> for year, <code>M</code> for month, <code>D</code> for day (<code>T</code> is a separator like <code>-</code>, <code>:</code> and <code>.</code>), <code>h</code> for hours, <code>m</code> for minutes, <code>s</code> for seconds, <code>f</code> for microseconds.</p>
+
+      <h5 class="api">d = time.todate(str or int64)</h5>
+
+      <p>The argument must be a string or a <code>cdata&lt;int64_t&gt;</code>. In the first case it constructs a date from its string representation which must follow the format above. In the second case the <code>cdata&lt;int64_t&gt;</code> corresponds to an implementation-defined internal representation of dates and must be obtained by a previous call to <code>d:ticks()</code>. This internal representation is consistent across all architectures and operating systems.</p>
+
+      <h5 class="api">n = d:year|month|day()</h5>
+
+      <p>Returns the values of the year, month, day part of a date.</p>
+
+      <h5 class="api">Y, M, D = d:ymd()</h5>
+
+      <p>Returns <code>d:year(), d:month(), d:day()</code></p>
+
+      <h5 class="api">int64 = d:ticks()</h5>
+
+      <p>Returns the <code>cdata&lt;int64_t&gt;</code> internal representation of the date which corresponds to the <strong>total</strong> number of microseconds lapsed since a constant implementation defined date.</p>
+
+      <h5 class="api">p = d:period()</h5>
+
+      <p>Returns the period corresponding to the time elapsed since the beginning of the date's day at 00:00 AM.</p>
+
+      <h5 class="api">bool = time.isleapyear(year); bool = d:isleapyear()</h5>
+
+      <p>Returns whether the given year or the year component of a given date, is a leap year.</p>
+
+      <h5 class="api">day = time.endofmonth(year, month); day = d:endofmonth()</h5>
+
+      <p>Returns the day corresponding to the end of the month (in a given year). The second function uses the year and month components of a given date.</p>
+
+      <h5 class="api">n = time.weekday(year, month, day); n = d:weekday()</h5>
+
+      <p>Returns the weekday number (from 1 for Monday to 7 for Sunday) corresponding to a given date or to a given <code>year</code>, <code>month</code>, <code>day</code> combination.</p>
+      
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>

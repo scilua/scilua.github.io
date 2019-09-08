@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua - Sci.Alg</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li class="active"><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li><a href="rclient.html">Rclient</a></li>
+                <li><a href="time.html">Time</a></li>
+                <li><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>Sci.Alg: Vector and Matrix Algebra</h1>
+
+
+      <p>A vector and matrix algebra library with a focus on:</p>
+
+      <ul>
+        <li><strong>simplicity</strong>: a simple API built around a single kind of objects: 2-D arrays</li>
+        <li><strong>generality</strong>: dense homogeneous arrays of Lua numbers (<code>doubles</code>) or arbitrary value-type FFI ctype</li>
+        <li><strong>performance</strong>: carefully designed for efficiency with use of BLAS and LAPACK kernels</li>
+        <li><strong>safety</strong>: out of bounds access and dimensional compatibility are checked, algorithms are unaffected by aliasing</li>
+        <li><strong>consistency</strong>: 1-based indexing as for Lua tables</li>
+      </ul>
+
+      <p>This library implements 2-dimensional arrays which can be used at the same time as vectors and as matrices:</p>
+
+<pre><code class="language-lua">
+local alg = require 'sci.alg'
+
+local x = alg.mat(2, 3) -- A 2-rows x 3-columns array, i.e. a matrix.
+
+-- Can be used as a matrix:
+for r=1,x:nrow() do 
+  for c=1,x:ncol() do
+    x[{r, c}] = r*10 + c
+  end
+end
+
+print(x)
+--> +11.00000,+12.00000,+13.00000
+--> +21.00000,+22.00000,+23.00000
+
+-- Can be used as a vector too, access is left-to-right, top-to-bottom:
+for i=1,#x do
+  x[i] = i
+end
+
+print(x)
+--> +1.000000,+2.000000,+3.000000
+--> +4.000000,+5.000000,+6.000000
+
+local y = alg.vec(6) -- A 6-rows x 1-column array, i.e. a (column) vector.
+
+print(y)
+--> +0.000000
+--> +0.000000
+--> +0.000000
+--> +0.000000
+--> +0.000000
+--> +0.000000
+</code></pre>
+
+      <p>In practice, most code will interface with each single array as if it were only a vector or only a matrix. No performance penalty is involved in this dual representation.</p>
+
+      <p>The length of an array is defined as its number of rows times its number of columns. Arrays with zero rows, columns or length are allowed.</p>
+
+      <h2>API</h2>
+
+      <h5 class="api">alg = require 'sci.alg'</h5>
+
+      <p>Returns the algebra module, no global is set.</p>
+      
+      <h5 class="api">A = alg.vec(n)</h5>
+        
+      <p>Returns a zero-initialized array of Lua numbers of length <code>n</code> with <code>n</code> rows and 1 column.</p> 
+
+      <p>See <code>alg.typeof()</code> for arrays of different element type.</p>
+      
+      <h5 class="api">A = alg.tovec(t)</h5>
+
+      <p>Returns an array of Lua numbers with 1 column initialized with the elements of <code>t</code> which must be a Lua table sequence:</p>
+
+<pre><code class="language-lua">
+local x = alg.tovec{1, 2, 3}
+
+print(x)
+--> +1.000000
+--> +2.000000
+--> +3.000000
+</code></pre>
+
+      <p>See <code>alg.typeof()</code> for arrays of different element type.</p>
+      
+      <h5 class="api">A = alg.mat(nrow, ncol)</h5>
+
+      <p>Returns a zero-initialized array of Lua numbers of length <code>nrow*ncol</code> with <code>nrow</code> rows and <code>ncol</code> columns.</p> 
+
+      <p>See <code>alg.typeof()</code> for arrays of different element type.</p>
+
+      <h5 class="api">A = alg.tomat(tt)</h5>
+
+      <p>Returns an array of Lua numbers initialized with the elements of <code>tt</code> which must be a Lua table sequence of Lua table sequences of constant length:</p>
+
+<pre><code class="language-lua">
+local x = alg.tomat{{1, 2, 3},
+                    {4, 5, 6}}
+
+print(x)
+--> +1.000000,+2.000000,+3.000000
+--> +4.000000,+5.000000,+6.000000
+</code></pre>
+
+      <p>See <code>alg.typeof()</code> for arrays of different element type.</p>
+      
+      <h5 class="api">A = alg.join(...)</h5>
+      
+      <p>Returns an array which is obtained by stacking the passed arrays vertically. Horizontal stacking is obtained via the <code>..</code> concatenation operator:</p>
+
+<pre><code class="language-lua">
+local x1, x2 = alg.tovec{1, 2, 3}, alg.tovec{4, 5}
+local x1x2 = alg.join(x1, x2)
+
+print(x1x2)
+--> +1.000000
+--> +2.000000
+--> +3.000000
+--> +4.000000
+--> +5.000000
+
+local x, y = alg.tomat{{1, 2}, {3, 4}}, alg.tomat{{5, 6}, {7, 8}}
+local xy = alg.join(x..y..x, y..x..y)
+print(xy)
+--> +1.000000,+2.000000,+5.000000,+6.000000,+1.000000,+2.000000
+--> +3.000000,+4.000000,+7.000000,+8.000000,+3.000000,+4.000000
+--> +5.000000,+6.000000,+1.000000,+2.000000,+5.000000,+6.000000
+--> +7.000000,+8.000000,+3.000000,+4.000000,+7.000000,+8.000000
+</code></pre>
+
+      <p>Please notice that <code>..</code> does <strong>not</strong> create a new array and its use is limited to the <code>alg.join()</code> efunction.</p>
+      
+      <h5 class="api">A2 = A:new()</h5>
+
+      <p>Returns a zero-filled array with the same dimensions of <code>A</code>.</p>
+      
+      <h5 class="api">A2 = A:copy()</h5>
+
+      <p>Returns an array which is an independent copy of <code>A</code>.</p>
+      
+      <h5 class="api">n = #A</h5>
+
+      <p>Returns the length of <code>A</code>.</p>
+      
+      <h5 class="api">n = A:nrow()</h5>
+
+      <p>Returns the number of rows of <code>A</code>.</p>
+      
+      <h5 class="api">n = A:ncol()</h5>
+
+      <p>Returns the number of columns of <code>A</code>.</p>
+      
+      <h5 class="api">el = A[i]; A[i] = el</h5>
+
+      <p>Gets / sets the element at position <code>i</code>, access is left-to-right, top-to-bottom and indexing starts at 1.</p>
+      
+      <h5 class="api">el = A[{r,c}]; A[{r,c}] = el</h5>
+
+      <p>Gets / sets the element at row <code>r</code> and column <code>c</code>, indexing starts at 1.</p>
+      
+      <h5 class="api">t = A:totable()</h5>
+
+      <p>Returns a Lua table sequence of Lua table sequences which are initialized with the elements of <code>A</code>.</p>
+      
+      <h5 class="api">s = tostring(A)</h5>
+
+      <p>Returns a string representation of the array.</p>
+      
+      <h5 class="api">alg.mul(C, A, B, At, Bt)</h5>
+
+      <p>The matrix <code>C</code> is overwritten with the result of the matrix-matrix multiplication <code>A</code> times <code>B</code>. The remaining arguments are booleans specifying weather the multiplication is of transposed matrices or not. Note that matrix-vector multiplication is a special case of matrix-matrix multiplication and hence already covered by this function. The element type of all matrices involved must be constant and one of <code>double</code>, <code>float</code>, <code>complex</code>, <code>complex float </code>.</p>
+      
+      <h5 class="api">alg.pow(C, A, s)</h5>
+
+      <p>The square matrix <code>A</code> is exponentiated to the <code>s</code>-th power, where <code>s</code> is a positive integer, and the matrix <code>C</code> is overwritten with the result. The element type of all matrices involved must be constant and one of <code>double</code>, <code>float</code>, <code>complex</code>, <code>complex float</code>.</p>
+      
+      <h5 class="api">algct = alg.typeof(ctype)</h5>
+
+      <p>Takes as input a FFI ctype or a FFI ctype string declaration and returns a table <code>algct</code> with keys <code>algct.vec()</code>, <code>algct.tovec()</code>, <code>algct.mat()</code>, <code>algct.tomat()</code> where these constructors return arrays of element type <code>ctype</code>.<p>
+
+      <p>The argument <code>ctype</code> must be one of the following value types:</p>
+
+<pre><code class="language-lua">
+bool
+char             
+int8_t           
+int16_t          
+int32_t          
+int64_t          
+uint8_t          
+uint16_t         
+uint32_t         
+uint64_t         
+float            
+double           
+complex float
+complex  
+</code></pre>
+
+      <p>or the dual number <code>diff.dn</code> from the automatic differentiation module <a href="sci_diff.html">sci.diff</a>.</p>
+
+      <p>The constructors for arrays of <code>doubles</code> (i.e. Lua numbers) have already been defined in the <code>alg</code> module:</p>
+
+<pre><code class="language-lua">
+-- These are already available in alg:
+alg.vec   = alg.typeof('double').vec
+alg.tovec = alg.typeof('double').tovec
+alg.mat   = alg.typeof('double').mat
+alg.tomat = alg.typeof('double').tomat
+</code></pre>
+
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>

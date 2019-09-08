@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="icon" href="images/favicon.ico">
+
+    <link rel="stylesheet" href="css/prism-ghcolors.css">
+
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
+    <meta name="author" content="Stefano Peluchetti">
+    <title>SciLua - Sci.Stat</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="index.html">SciLua</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topnavbar">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="sci_alg.html">sci.alg</a></li>
+                <li><a href="sci_diff.html">sci.diff</a></li>
+                <li><a href="sci_dist.html">sci.dist</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmin</a></li>
+                <li><a href="sci_fminfmax.html">sci.fmax</a></li>
+                <li><a href="sci_math.html">sci.math</a></li>
+                <li><a href="sci_mcmc.html">sci.mcmc</a></li>
+                <li><a href="sci_prng.html">sci.prng</a></li>
+                <li><a href="sci_qrng.html">sci.qrng</a></li>
+                <li><a href="sci_quad.html">sci.quad</a></li>
+                <li><a href="sci_root.html">sci.root</a></li>
+                <li class="active"><a href="sci_stat.html">sci.stat</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Non-Sci<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="ljsqlite3.html">LJSQLite3</a></li>
+                <li><a href="rclient.html">Rclient</a></li>
+                <li><a href="time.html">Time</a></li>
+                <li><a href="xsys.html">Xsys</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">More<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="https://github.com/stepelu">On Github</a></li>
+                <li><a href="optimizing.html">Optimizing</a></li>
+                <li><a href="license.html">License</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <h1>Sci.Stat: Statistical Functions</h1>
+
+      <p>This module contains statistical functions and on-line statistical accumulators. All the algorithms are implemented with a focus on the numerical stability of the computations. It is thus preferable to use these estimation functions instead of re-creating the functionality via <a href="sci_alg.html">sci.alg</a> operations.</p>
+
+      <h2>API - Generic</h2>
+
+      <h5 class="api">mu = stat.mean(x)</h5>
+
+      <p>Returns the sample mean of the vector <code>x</code> which is based on the mathematical estimator:
+      $$ \mu_x = \frac{1}{N}\sum_{i = 1}^{N} x_i $$
+      </p>
+
+      <h5 class="api">var = stat.var(x)</h5>
+
+      <p>Returns the 'unbiased' sample variance of the vector <code>x</code> which is based on the mathematical estimator:
+      $$  \sigma^2_x = \frac{1}{N-1}\sum_{i = 1}^{N} \left(x_i - \mu_x\right)^2 $$
+      The vector x must have minimum length of 2.</p>
+
+      <h5 class="api">cov = stat.cov(x, y)</h5>
+
+      <p>Returns the sample covariance between the vector <code>x</code> and the vector <code>y</code> which is based on the mathematical estimator:
+      $$  \text{cov}(x,y) = \frac{1}{N-1}\sum_{i = 1}^{N} \left(x_i - \mu_x\right)\left(y_i - \mu_y\right) $$
+      Both vectors must share the same length bigger or equal to 2.</p>
+
+      <h5 class="api">cor = stat.cor(x, y)</h5>
+
+      <p>Returns the sample correlation between the vector <code>x</code> and the vector <code>y</code> which is based on the mathematical estimator:
+      $$  \rho(x,y) = \frac{\text{cov}(x,y)}{\sigma_x\sigma_y} $$
+      Both vectors must share the same length bigger or equal to 2.</p>
+
+      <h2>API - Online Accumulators</h2>
+
+      <p>Follows a list of on-line accumulators that offer the same statistical estimators just introduced. We speak of on-line accumulators as it's possible to update the running estimates to take into account new observations using the <code>ol:push()</code> function with constant complexity. Each on-line accumulator has an associated dimension which is set at creation time and cannot be changed afterwards.</p>
+
+      <p>In the following we refer to <code>ol</code> for a generic on-line accumulator. All <code>ol</code> objects support the following 4 methods:</p>
+
+      <h5 class="api">ol:push()</h5>
+
+      <p>Take <code>x</code> into account. If <code>ol</code> has been initialized with a dimension of 0 then <code>x</code> must be a Lua number. Otherwise <code>x</code> must be a vector of length equal to the dimension of ol.</p>
+
+      <h5 class="api">ol:clear()</h5>
+
+      <p>Reset <code>ol</code> to its initial state (no observations taken into account yet).</p>
+
+      <h5 class="api">dim = ol:dim()</h5>
+
+      <p>Returns the dimension of <code>ol</code>.</p>
+
+      <h5 class="api">len = ol:len()</h5>
+
+      <p>Returns the number of observations taken into account in <code>ol</code>.</p>
+
+      <h5 class="api">ol = stat.olmean(dim)</h5>
+
+      <p>Returns an on-line accumulator of dimension <code>dim</code> which supports the following method:</p>
+
+      <h5 class="api">mu = ol:mean(); ol:mean(y)</h5>
+
+      <p>If <code>ol</code> has been initialized with a dimension of 0 then the first variant is used and the running sample mean is returned. Otherwise <code>y</code> must be a vector of length equal to the dimension of <code>ol</code> to which the running sample mean is set.</p>
+
+      <h5 class="api">ol = stat.olvar(dim)</h5>
+
+      <p>Returns an on-line accumulator of dimension <code>dim</code> which supports <code>ol:mean()</code> and the following method:</p>
+
+      <h5 class="api">sigma2 = ol:var(); ol:var(y)</h5>
+
+      <p>If <code>ol</code> has been initialized with a dimension of 0 then the first variant is used and the running sample variance is returned. Otherwise <code>y</code> must be a vector of length equal to the dimension of <code>ol</code> to which the running sample variance is set.</p>
+
+      <h5 class="api">ol = stat.olcov(dim)</h5>
+
+      <p>Returns an on-line accumulator of dimension <code>dim</code> which supports <code>ol:mean()</code>, <code>ol:var()</code> and the following two methods:</p>
+
+      <h5 class="api">ol:cov(C)</h5>
+
+      <p><code>C</code> must be a square matrix with dimensions equal to the dimension of <code>ol</code> to which the running sample covariance is set.</p>
+
+      <h5 class="api">ol:cor(R)</h5>
+
+      <p><code>R</code> must be a square matrix with dimensions equal to the dimension of <code>ol</code> to which the running sample correlation is set.</p>
+      
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid text-center">
+        <h6>&copy; 2011-2019 - Stefano Peluchetti</h6>
+      </div>
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53199019-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>
