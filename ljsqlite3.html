@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/custom.css">
 
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="icon" href="images/favicon.ico">
 
@@ -79,7 +79,7 @@
 
       <h1>LJSQlite3: SQlite3 Interface</h1>
 
-      <p>SQLite databases require no preliminary setup (installation and configuration or a database server), offer competitive performance and are portable as each database is fully contained in a single file. Additionally the <a href="http://www.sqlite.org/sqlite.html">command-line shell</a> can be used to facilitate common tasks. Thanks to all these features SQLite databases are ideal to store and manipulate scientific data. We refer to the <a href="http://sqlite.org">official documentation</a> for more information on SQLite.</p>
+      <p>SQLite databases require no preliminary setup (installation and configuration or a database server), offer competitive performance and are portable as each database is fully contained in a single file. Additionally the <a href="https://www.sqlite.org/sqlite.html">command-line shell</a> can be used to facilitate common tasks. Thanks to all these features SQLite databases are ideal to store and manipulate scientific data. We refer to the <a href="https://sqlite.org">official documentation</a> for more information on SQLite.</p>
 
       <p>Using the LJSQLITE3 library data can be conveniently exchanged between Lua and SQLite databases. Moreover arbitrary operations can be performed on SQLite databases directly from Lua:</p>
 
@@ -131,7 +131,7 @@ conn:close() -- Close stmt as well.
 
       <h2>SQLite Type Mappings</h2>
 
-      <p>The <a href="http://www.sqlite.org/datatype3.html">SQLite datatypes</a> page is a recommended reading. Summarizing, each element can only be of SQLite type: NULL, REAL, TEXT, BLOB or INTEGER. The declared type of each table column at the moment a table is created only represents a preferred type and any element in any column is allowed to be of any of the 5 types above. Here we focus only on the conversions between Lua types and SQLite types.</p>
+      <p>The <a href="https://www.sqlite.org/datatype3.html">SQLite datatypes</a> page is a recommended reading. Summarizing, each element can only be of SQLite type: NULL, REAL, TEXT, BLOB or INTEGER. The declared type of each table column at the moment a table is created only represents a preferred type and any element in any column is allowed to be of any of the 5 types above. Here we focus only on the conversions between Lua types and SQLite types.</p>
 
       <p>In the case of insertions via (Lua string) commands nothing is required on Lua side: the input SQLite types are determined by parsing the command (for instance <code>1.53</code> would be a REAL, <code>1</code> an INTEGER, <code>'1.53'</code> a TEXT and <code>CAST('1.53' AS BLOB)</code> a BLOB).</p>
 
@@ -170,7 +170,7 @@ conn:close() -- Close stmt as well.
 
       <h2>API</h2>
 
-      <p>In the following <code>conn</code> is an instance of a connection object which represents one or multiple (see the <a href="http://www.sqlite.org/lang_attach.html">ATTACH DATABASE</a> command) connections to SQLite databases and <code>stmt</code> is an instance of a prepared statement: an object associated to a given <code>conn</code> which represents an SQLite command which has been prepared for later execution. It is mainly used to improve the efficiency of SQLite operations as the preparation phase can be as expensive as the execution phase and prepared statements can be reused (see the <code>stmt:reset()</code> method). Moreover <code>stmt</code> supports the <a href="#bind1">binding methods</a> which allow to more efficient insertion of Lua data in databases by skipping the conversion of such data to strings. Any SQLite command is represented by a Lua string. All <code>stmt</code>s which have been prepared by a <code>conn</code> always keep the <code>conn</code> alive as long as necessary.</p>
+      <p>In the following <code>conn</code> is an instance of a connection object which represents one or multiple (see the <a href="https://www.sqlite.org/lang_attach.html">ATTACH DATABASE</a> command) connections to SQLite databases and <code>stmt</code> is an instance of a prepared statement: an object associated to a given <code>conn</code> which represents an SQLite command which has been prepared for later execution. It is mainly used to improve the efficiency of SQLite operations as the preparation phase can be as expensive as the execution phase and prepared statements can be reused (see the <code>stmt:reset()</code> method). Moreover <code>stmt</code> supports the <a href="#bind1">binding methods</a> which allow to more efficient insertion of Lua data in databases by skipping the conversion of such data to strings. Any SQLite command is represented by a Lua string. All <code>stmt</code>s which have been prepared by a <code>conn</code> always keep the <code>conn</code> alive as long as necessary.</p>
 
       <h5 class="api">sql = require "ljsqlite3"</h5>
 
@@ -269,7 +269,7 @@ print(id, num) --> myid1 200
 
       <h5 class="api">conn(commands, out = print)</h5>
 
-      <p>Executes SQLite commands separated by the <code>';'</code> character (a trailing <code>';'</code> is fine and is ignored) and passes all the records returned by all the commands preceded by the corresponding column names as strings to <code>out</code> (thus multiple parameters are passed to <code>out()</code> for each call). As <code>out</code> defaults to <code>print</code> this method mimics the <a href="http://www.sqlite.org/cli.html">Command Line Shell</a> by default. Example:</p>
+      <p>Executes SQLite commands separated by the <code>';'</code> character (a trailing <code>';'</code> is fine and is ignored) and passes all the records returned by all the commands preceded by the corresponding column names as strings to <code>out</code> (thus multiple parameters are passed to <code>out()</code> for each call). As <code>out</code> defaults to <code>print</code> this method mimics the <a href="https://www.sqlite.org/cli.html">Command Line Shell</a> by default. Example:</p>
 
 <pre><code class="language-lua">
 local conn = sql.open("")
@@ -303,7 +303,7 @@ step      = function(state, ...) --> return nothing
 final     = function(state)      --> return mapping-allowed result
 </code></pre>
 
-      <p>By mapping-allowed we mean that the return type must be one of the Lua types listed in the input column of table <a href="#mapping-allowed">Lua types &rarr; SQLite types</a>. For the aggregate case the state can be any Lua object, it's created by calling <code>initstate()</code> and is passed back for each record as first argument to <code>step()</code> and after that as the unique argument to <code>final()</code> which returns the result of the computation. There is no state for scalar functions as it is not needed. To clear a registered function (and free the <a href="http://luajit.org/ext_ffi_semantics.html#callback_resources">callback resource</a>) simply call the methods <code>conn:setscalar()</code> and <code>conn:setaggregate()</code> passing <code>name</code> as the only argument. Example:</p>
+      <p>By mapping-allowed we mean that the return type must be one of the Lua types listed in the input column of table <a href="#mapping-allowed">Lua types &rarr; SQLite types</a>. For the aggregate case the state can be any Lua object, it's created by calling <code>initstate()</code> and is passed back for each record as first argument to <code>step()</code> and after that as the unique argument to <code>final()</code> which returns the result of the computation. There is no state for scalar functions as it is not needed. To clear a registered function (and free the <a href="https://luajit.org/ext_ffi_semantics.html#callback_resources">callback resource</a>) simply call the methods <code>conn:setscalar()</code> and <code>conn:setaggregate()</code> passing <code>name</code> as the only argument. Example:</p>
 
  <pre><code class="language-lua">
 local conn = sql.open("")
@@ -380,7 +380,7 @@ end
 
       <h5 class="api" id="bind1">self = stmt:bind1(i, value)</h5>
 
-      <p>This method has to be used with statements which have been prepared for later binding according to <a href="http://www.sqlite.org/lang_expr.html#varparam">SQLite parameters syntax</a>. Please notice that <strong>only</strong> parameters indexed by a numerical value are supported. <code>stmt:bind1()</code> binds a single mapping-allowed Lua value (i.e. in the input column of table <a href="#mapping-allowed">Lua types &rarr; SQLite types</a>) to the i-th parameter of the query. It is an error for <code>i</code> to be out of the allowed bounds. Any parameter which has not been binded is set to NULL. Binded parameters persist among multiple calls to <code>stmt:reset()</code> and <code>stmt:step()</code>: <code>stmt:clearbind()</code> must be used to set all the parameters back to NULL). Example:</p>
+      <p>This method has to be used with statements which have been prepared for later binding according to <a href="https://www.sqlite.org/lang_expr.html#varparam">SQLite parameters syntax</a>. Please notice that <strong>only</strong> parameters indexed by a numerical value are supported. <code>stmt:bind1()</code> binds a single mapping-allowed Lua value (i.e. in the input column of table <a href="#mapping-allowed">Lua types &rarr; SQLite types</a>) to the i-th parameter of the query. It is an error for <code>i</code> to be out of the allowed bounds. Any parameter which has not been binded is set to NULL. Binded parameters persist among multiple calls to <code>stmt:reset()</code> and <code>stmt:step()</code>: <code>stmt:clearbind()</code> must be used to set all the parameters back to NULL). Example:</p>
 
 <pre><code class="language-lua">
 local conn = sql.open("")

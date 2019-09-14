@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/custom.css">
 
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="icon" href="images/favicon.ico">
 
@@ -87,9 +87,9 @@
 
       <h5 class="api">v, err = quad.dblexp(f, a, b, stop = 1e-6)</h5>
 
-      <p>Implements the double exponential quadrature algorithm described in <a href="http://crd-legacy.lbl.gov/~dhbailey/dhbpapers/dhb-tanh-sinh.pdf">Bailey06</a>. Takes as input the scalar integrand function <code>f</code>, the integration interval (<code>a</code>, <code>b</code>) and a positive value <code>stop</code>. The integration stops when the maximum number of integration points has been used or when doubling the number of integration points results in an absolute change in the numerical evaluation of the integral which is smaller than <code>stop</code>. The function returns the numerical evaluation of the integral and the last absolute change in such evaluation (which corresponds to the last doubling of the integration points).</p>
+      <p>Implements the double exponential quadrature algorithm described in <a href="https://crd-legacy.lbl.gov/~dhbailey/dhbpapers/dhb-tanh-sinh.pdf">Bailey06</a>. Takes as input the scalar integrand function <code>f</code>, the integration interval (<code>a</code>, <code>b</code>) and a positive value <code>stop</code>. The integration stops when the maximum number of integration points has been used or when doubling the number of integration points results in an absolute change in the numerical evaluation of the integral which is smaller than <code>stop</code>. The function returns the numerical evaluation of the integral and the last absolute change in such evaluation (which corresponds to the last doubling of the integration points).</p>
 
-      <p>The quadratic order of convergence in the number of integration points used requires <code>f</code> to be analytic over the integration interval and <code>f</code> is allowed to be unbounded on the extremes of integration. The double exponential method has been shown in <a href="http://crd-legacy.lbl.gov/~dhbailey/dhbpapers/quadrature.pdf">Bailey05</a> to be competitive with other numerical quadrature methods for most integrand functions.</p>
+      <p>The quadratic order of convergence in the number of integration points used requires <code>f</code> to be analytic over the integration interval and <code>f</code> is allowed to be unbounded on the extremes of integration. The double exponential method has been shown in <a href="https://crd-legacy.lbl.gov/~dhbailey/dhbpapers/quadrature.pdf">Bailey05</a> to be competitive with other numerical quadrature methods for most integrand functions.</p>
       
     </div>
 

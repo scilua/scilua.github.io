@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/custom.css">
 
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="icon" href="images/favicon.ico">
 
@@ -79,7 +79,7 @@
 
       <h1>Optimizing Performance</h1>
 
-      <p>LuaJIT produces very efficient compiled code in most cases with no tuning required. That said, the <a href="http://wiki.luajit.org/Numerical-Computing-Performance-Guide">numerical computing performance guide</a> contains guidelines that it's best to keep in mind if the algorithm's performance is critical.</p>
+      <p>LuaJIT produces very efficient compiled code in most cases with no tuning required. That said, the <a href="https://wiki.luajit.org/Numerical-Computing-Performance-Guide">numerical computing performance guide</a> contains guidelines that it's best to keep in mind if the algorithm's performance is critical.</p>
 
       <p>If performance turns out to be unsatisfactory the first step is to investigate the cause of the problem. The easiest way to do so is to run again the problematic code with the <code>-jv</code> flag which displays information about the progress of the JIT compiler:</p>
 
@@ -89,7 +89,7 @@ lua -jv problematic_script.lua
 
       <p>The problematic spots will be marked by <code>"fallback to interpreter"</code> preceded by hints about the issue.</p>
 
-      <p>Additionally, LuaJIT 2.1 bundles a <a href="http://repo.or.cz/w/luajit-2.0.git/blob_plain/v2.1:/doc/ext_profiler.html">profiler</a> which can be used to identify where most of the computational effort is spent and optimize the code accordingly. The profiler is activated by the <code>-jp</code> flag (multiple profiling options are available via <code>-jp=...</code>):</p>
+      <p>Additionally, LuaJIT 2.1 bundles a <a href="https://repo.or.cz/w/luajit-2.0.git/blob_plain/v2.1:/doc/ext_profiler.html">profiler</a> which can be used to identify where most of the computational effort is spent and optimize the code accordingly. The profiler is activated by the <code>-jp</code> flag (multiple profiling options are available via <code>-jp=...</code>):</p>
 
 <pre><code class="language-bash">
 lua -jp problematic_script.lua
@@ -101,7 +101,7 @@ lua -jp problematic_script.lua
 lua -Oloopunroll=60 problematic_script.lua
 </code></pre>
 
-      <p>All of LuaJIT optimization settings can be changed via the <code>-O</code> flag as explained in the <a href="http://luajit.org/running.html">LuaJIT manual</a>.</p>
+      <p>All of LuaJIT optimization settings can be changed via the <code>-O</code> flag as explained in the <a href="https://luajit.org/running.html">LuaJIT manual</a>.</p>
 
     </div>
 

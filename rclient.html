@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/custom.css">
 
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="icon" href="images/favicon.ico">
 
@@ -79,7 +79,7 @@
 
       <h1>Rclient: LuaJIT Client for Rserve</h1>
 
-      <p>A library that allows to execute arbitrary <a href="http://www.r-project.org/">R</a> programs within LuaJIT. Being the most widely used language for statistical computing, R features a huge number of scientific libraries. Of particular relevance is the possibility to leverage on the plotting capabilities of <a href="http://had.co.nz/ggplot2/">ggplot2</a> and similar libraries:</p>
+      <p>A library that allows to execute arbitrary <a href="https://www.r-project.org/">R</a> programs within LuaJIT. Being the most widely used language for statistical computing, R features a huge number of scientific libraries. Of particular relevance is the possibility to leverage on the plotting capabilities of <a href="https://had.co.nz/ggplot2/">ggplot2</a> and similar libraries:</p>
   
 <pre><code class="language-lua">
 local R = require "rclient"
@@ -115,7 +115,7 @@ print(df.a[1],  df.b[1],  df.c[1] ) --> 7 8 9
 
       <h2>RServe</h2>
 
-      <p>RCLIENT implements a client for <a href="http://www.rforge.net/Rserve/">Rserve</a> which is used to host a (local or remote) R session toward which a connection is established. The following R code, to be executed in a R session, installs Rserve and starts a local R session:</p>
+      <p>RCLIENT implements a client for <a href="https://www.rforge.net/Rserve/">Rserve</a> which is used to host a (local or remote) R session toward which a connection is established. The following R code, to be executed in a R session, installs Rserve and starts a local R session:</p>
 
 <pre><code class="language-r">
 install.packages("Rserve")
@@ -195,7 +195,7 @@ y[column_name_N] = y[N]
 
       <h5 class="api">r = rclient.connect(address = "localhost", port = 6311)</h5>
 
-      <p>Opens a connection to an instance of R started by Rserve and returns a connection object. The defaults result in a connection to a local instance of R started by Rserve in its default configuration. If the environment variable <code>LUA_EXEC</code> is set (as it is the case if using <a href="http://ulua.io">ULua</a>), the Rserve instance's working directory is set equal to it.</p>
+      <p>Opens a connection to an instance of R started by Rserve and returns a connection object. The defaults result in a connection to a local instance of R started by Rserve in its default configuration. If the environment variable <code>LUA_EXEC</code> is set (as it is the case if using <a href="https://ulua.io">ULua</a>), the Rserve instance's working directory is set equal to it.</p>
 
       <h5 class="api">r(rcode, out = print)</h5>
 

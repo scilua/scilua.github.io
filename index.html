@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/custom.css">
 
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="icon" href="images/favicon.ico">
 
@@ -83,10 +83,10 @@
 
       <div class="row">
         <div class="col-sm-6">
-          <p><a href="http://www.lua.org/about.html"><strong>Lua</strong></a> is a dynamic language characterized by a small number of simple but powerful concepts that allow to easily implement complex algorithms. Lua is fast to learn thanks to its high-level nature, to the concise syntax and to the precise documentation. Lua is a proven robust language that offers both object-oriented and functional programming features.</p>
+          <p><a href="https://www.lua.org/about.html"><strong>Lua</strong></a> is a dynamic language characterized by a small number of simple but powerful concepts that allow to easily implement complex algorithms. Lua is fast to learn thanks to its high-level nature, to the concise syntax and to the precise documentation. Lua is a proven robust language that offers both object-oriented and functional programming features.</p>
         </div>
         <div class="col-sm-6">
-          <p><a href="http://luajit.org/luajit.html"><strong>LuaJIT</strong></a> is an extremely optimized Just In Time compiler for Lua. Start-up and warm-up times are negligible, compile times are in the microsecond to millisecond range and the typical performance of compiled LuaJIT programs is close to the one of C/C++. LuaJIT includes the <a href="http://luajit.org/ext_ffi.html">FFI library</a> which allows to call C function directly.</p>
+          <p><a href="https://luajit.org/luajit.html"><strong>LuaJIT</strong></a> is an extremely optimized Just In Time compiler for Lua. Start-up and warm-up times are negligible, compile times are in the microsecond to millisecond range and the typical performance of compiled LuaJIT programs is close to the one of C/C++. LuaJIT includes the <a href="https://luajit.org/ext_ffi.html">FFI library</a> which allows to call C function directly.</p>
         </div>
       </div>
 
@@ -94,13 +94,13 @@
 
       <img class="img-responsive" src="images/results_norm.png" alt="Benchmark Plot" />
 
-      <p>The figure above compares the running time required (lower is better) to run the <a href="http://julialang.org">Julia</a> <a href="https://github.com/JuliaLang/julia/tree/master/test/perf/micro">benchmark suite</a>. Timings are relative to the C implementation.</p>
+      <p>The figure above compares the running time required (lower is better) to run the <a href="https://julialang.org">Julia</a> <a href="https://github.com/JuliaLang/julia/tree/master/test/perf/micro">benchmark suite</a>. Timings are relative to the C implementation.</p>
 
       <p>The details: Linux x64 / gcc 5.2.1 / Julia 0.4.1 / SciLua 1.0 latest, implementation: <a href="download/perf-v1.2.sci.lua">perf-v1.2.sci.lua</a>.</p>
 
       <h2>Install</h2>
 
-      <p>The easiest way to install SciLua is via the <a href="http://ulua.io">ULua</a> distribution.</p>
+      <p>The easiest way to install SciLua is via the <a href="https://ulua.io">ULua</a> distribution.</p>
 
       <p>Having installed (i.e. unzipped) ULua, execute:</p>
 
@@ -111,7 +111,7 @@ ulua/bin/upkg add sci-lang   # Install the sci-lang package (SciLua syntax exten
 
       <p>This is the suggested way as all dependencies are handled by the package manager and SciLua can be kept up to date using <code>upkg update</code>.</p>
 
-      <p>Alternatively, it is possible to install SciLua manually. Download and unzip <a github-release="https://api.github.com/repos/stepelu/lua-sci/tags" onclick="ga('send', 'event', 'download', 'binary', 'sci')">sci~latest.zip</a> and <a github-release="https://api.github.com/repos/stepelu/lua-sci-lang/tags" onclick="ga('send', 'event', 'download', 'binary', 'sci-lang')">sci-lang~latest.zip</a> into folders named respectively <code>sci</code> and <code>sci-lang</code> and make sure that such modules can be found by LuaJIT (check <code>package.path</code> documentation). Notice that SciLua requires <a href="https://github.com/stepelu/lua-xsys">xsys</a> and <a href="http://www.openblas.net/">OpenBLAS</a> to be installed as well.</p>
+      <p>Alternatively, it is possible to install SciLua manually. Download and unzip <a github-release="https://api.github.com/repos/stepelu/lua-sci/tags" onclick="ga('send', 'event', 'download', 'binary', 'sci')">sci~latest.zip</a> and <a github-release="https://api.github.com/repos/stepelu/lua-sci-lang/tags" onclick="ga('send', 'event', 'download', 'binary', 'sci-lang')">sci-lang~latest.zip</a> into folders named respectively <code>sci</code> and <code>sci-lang</code> and make sure that such modules can be found by LuaJIT (check <code>package.path</code> documentation). Notice that SciLua requires <a href="https://github.com/stepelu/lua-xsys">xsys</a> and <a href="https://www.openblas.net/">OpenBLAS</a> to be installed as well.</p>
 
       <h2>Sci Library</h2> 
 

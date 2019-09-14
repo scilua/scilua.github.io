@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/custom.css">
 
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="icon" href="images/favicon.ico">
 
@@ -85,9 +85,9 @@
 
       <h5 class="api">theta1, eps1, invmass1 = mcmc.nuts(rng, f, theta0, options)</h5>
 
-      <p>Implements the No-U-Turn Sampler (NUTS) of <a href="http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf">Hoffman&amp;Gelman[13]</a>. This is an adaptive MCMC algorithm which belongs to the class of Hamiltonian Monte Carlo (HMC) samplers. As such the gradient of the log-density is required to carry out the simulation. The <a href="sci_diff.html">sci.diff</a> module allows for the gradient to be automatically computed without approximations with minimal user effort.</p>
+      <p>Implements the No-U-Turn Sampler (NUTS) of <a href="https://www.stat.columbia.edu/~gelman/research/published/nuts.pdf">Hoffman&amp;Gelman[13]</a>. This is an adaptive MCMC algorithm which belongs to the class of Hamiltonian Monte Carlo (HMC) samplers. As such the gradient of the log-density is required to carry out the simulation. The <a href="sci_diff.html">sci.diff</a> module allows for the gradient to be automatically computed without approximations with minimal user effort.</p>
 
-      <p>The algorithm is implemented according to the paper mentioned above but additionally a diagonal (or optionally dense) mass matrix is estimated during the adaptation phase to improve the performance of the sampler. Similar improvements have been implemented in the <a href="http://mc-stan.org/">Stan Project</a> implementation of NUTS.</p>
+      <p>The algorithm is implemented according to the paper mentioned above but additionally a diagonal (or optionally dense) mass matrix is estimated during the adaptation phase to improve the performance of the sampler. Similar improvements have been implemented in the <a href="https://mc-stan.org/">Stan Project</a> implementation of NUTS.</p>
 
       <p>The argument <code>rng</code> is a <a href="sci_prng.html">prng</a> object, the function <code>f(x, grad)</code> sets <code>grad</code> to the gradient of the log-density at <code>x</code> and returns the value of the log-density at <code>x</code>. Both <code>x</code> and <code>grad</code> must have the same length of <code>theta0</code> which is the starting value of the Markov Chain (adaptation phase). The log-density must evaluate to a finite value at <code>theta0</code>. The argument <code>options</code> is a table and the algorithm makes use of the following string keys (defaults in square brackets):</p>
 
