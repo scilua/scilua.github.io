@@ -1,33 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/custom.css" />
 
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="icon" href="images/favicon.ico" />
 
-    <link rel="stylesheet" href="css/prism-ghcolors.css">
+    <link rel="stylesheet" href="css/prism-ghcolors.css" />
 
     <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
-    <meta name="author" content="Stefano Peluchetti">
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT" />
+    <meta name="author" content="Stefano Peluchetti" />
     <title>SciLua - Sci.Fmin/Fmax</title>
   </head>
   <body>
-    
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
-            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="index.html">SciLua</a>
         </div>
@@ -69,54 +67,112 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+            <li>
+              <a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
 
     <div class="container-fluid">
-
       <h1>Sci.Fmin/Fmax: Function Optimization</h1>
 
-      <p>The <code>sci.fmin</code> and <code>sci.fmax</code> modules deal respectively with the numerical minimization and numerical maximization of functions of one or more variables. To simplify the exposition only the case of function minimization is discussed here. All algorithms are implemented symmetrically for both <code>sci.fmin</code> and <code>sci.fmax</code> modules.</p>
-    
+      <p>
+        The <code>sci.fmin</code> and <code>sci.fmax</code> modules deal respectively with the numerical minimization and numerical maximization of functions of one or more
+        variables. To simplify the exposition only the case of function minimization is discussed here. All algorithms are implemented symmetrically for both
+        <code>sci.fmin</code> and <code>sci.fmax</code> modules.
+      </p>
+
       <h2>API</h2>
-  
+
       <h5 class="api">xm, fm, vm, xval, fval, vval = fmin.de(f, options)</h5>
 
-      <p>An adaptive version of the differential evolution global stochastic optimizer for non-linearly constrained real valued functions of multiple variables based on <a href="https://web.mysites.ntu.edu.sg/epnsugan/PublicSite/Shared%20Documents/CEC-2006/Huang-Qin.pdf">Huang&amp;Qin[06]</a>. The function to be minimized, <code>f</code>, takes as input a single vector. Options is a table and the algorithm makes use of the following string keys (defaults in square brackets):</p>
+      <p>
+        An adaptive version of the differential evolution global stochastic optimizer for non-linearly constrained real valued functions of multiple variables based on
+        <a href="https://web.mysites.ntu.edu.sg/epnsugan/PublicSite/Shared%20Documents/CEC-2006/Huang-Qin.pdf">Huang&amp;Qin[06]</a>. The function to be minimized,
+        <code>f</code>, takes as input a single vector. Options is a table and the algorithm makes use of the following string keys (defaults in square brackets):
+      </p>
 
       <table class="table">
-        <tr><th>Key</th><th>Description</th></tr>
-        <tr><td><code>stop</code></td><td><code>[1e-6]</code> maximum range for the population or stop <code>function(xm, fm, vm, xval, fval, vval)</code></td></tr>
-        <tr><td><code>xl</code></td><td>upper bound for the population (vector)</td></tr>
-        <tr><td><code>xu</code></td><td>lower bound for the population (vector)</td></tr>
-        <tr><td><code>x0</code></td><td>initial population (matrix, individuals as rows)</td></tr>
-        <tr><td><code>np</code></td><td>[rule of thumb] population size</td></tr>
-        <tr><td><code>constraint</code></td><td><code>[nil]</code> constraint <code>function(x, lt)</code></td></tr>
-        <tr><td><code>rng</code></td><td><code>[prng.std()]</code> pseudo random generator to be used</td></tr>
+        <tr>
+          <th>Key</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><code>stop</code></td>
+          <td><code>[1e-6]</code> maximum range for the population or stop <code>function(xm, fm, vm, xval, fval, vval)</code></td>
+        </tr>
+        <tr>
+          <td><code>xl</code></td>
+          <td>upper bound for the population (vector)</td>
+        </tr>
+        <tr>
+          <td><code>xu</code></td>
+          <td>lower bound for the population (vector)</td>
+        </tr>
+        <tr>
+          <td><code>x0</code></td>
+          <td>initial population (matrix, individuals as rows)</td>
+        </tr>
+        <tr>
+          <td><code>np</code></td>
+          <td>[rule of thumb] population size</td>
+        </tr>
+        <tr>
+          <td><code>constraint</code></td>
+          <td><code>[nil]</code> constraint <code>function(x, lt)</code></td>
+        </tr>
+        <tr>
+          <td><code>rng</code></td>
+          <td><code>[prng.std()]</code> pseudo random generator to be used</td>
+        </tr>
       </table>
 
-      <p>If <code>stop</code> is a positive quantity, the algorithm stops when the maximum range over each dimension of the population gets smaller than the specified quantity. Otherwise <code>stop</code> is a function which is invoked after each generation and returns <code>true</code> to signal the end of the optimization. Its arguments are: the current argmin, the current minimum, the violation (i.e. the evaluation of <code>constraint(x, lt)</code>) for the current minimum, the current population matrix (individuals as rows), the vector of evaluations of <code>f(x)</code> corresponding to the current population, vector of violations corresponding to the current population.</p>
+      <p>
+        If <code>stop</code> is a positive quantity, the algorithm stops when the maximum range over each dimension of the population gets smaller than the specified quantity.
+        Otherwise <code>stop</code> is a function which is invoked after each generation and returns <code>true</code> to signal the end of the optimization. Its arguments are:
+        the current argmin, the current minimum, the violation (i.e. the evaluation of <code>constraint(x, lt)</code>) for the current minimum, the current population matrix
+        (individuals as rows), the vector of evaluations of <code>f(x)</code> corresponding to the current population, vector of violations corresponding to the current
+        population.
+      </p>
 
-      <p>The algorithm requires either <code>xl</code> and <code>xu</code> or <code>x0</code>. If <code>x0</code> is present then the initial population is set equal to <code>x0</code> and <code>np</code> is implicitly determined. Otherwise the hypercube defined by <code>xl</code>, <code>xu</code> is uniformly filled with <code>np</code> individuals.</p> 
+      <p>
+        The algorithm requires either <code>xl</code> and <code>xu</code> or <code>x0</code>. If <code>x0</code> is present then the initial population is set equal to
+        <code>x0</code> and <code>np</code> is implicitly determined. Otherwise the hypercube defined by <code>xl</code>, <code>xu</code> is uniformly filled with
+        <code>np</code> individuals.
+      </p>
 
       <p>If <code>np</code> is not set then it's determined according to a rule of thumb based on the dimensionality of the problem.</p>
 
-      <p>The function <code>constraint(x, lt)</code> allows to specify any kind of linear and non-linear constraint. Constraints must be expressed using <code>lt(x, y)</code> for <code>x &lt; y</code>, summed together and returned from the function. The use of <code>lt()</code> results in <code>constraint()</code> returning a positive quantity whenever the constraint are not satisfied and <code>0</code> whenever they are. We refer to this quantity as violation. If <code>constratin()</code> is not specified, it is assumed to always return <code>0</code>, i.e. the range of the function to be optimized is unbounded.</p>
+      <p>
+        The function <code>constraint(x, lt)</code> allows to specify any kind of linear and non-linear constraint. Constraints must be expressed using
+        <code>lt(x, y)</code> for <code>x &lt; y</code>, summed together and returned from the function. The use of <code>lt()</code> results in
+        <code>constraint()</code> returning a positive quantity whenever the constraint are not satisfied and <code>0</code> whenever they are. We refer to this quantity as
+        violation. If <code>constratin()</code> is not specified, it is assumed to always return <code>0</code>, i.e. the range of the function to be optimized is unbounded.
+      </p>
 
       <p>The algorithm guarantees not to evaluate <code>f(x)</code> at any point there the violation is positive, i.e. where the constraints are not satisfied.</p>
 
-      <p>It should be noted that in this variant of the Differential Evolution the population is allowed to move outside of the initial region if not constrained so by the use of <code>constraint()</code>.</p>
+      <p>
+        It should be noted that in this variant of the Differential Evolution the population is allowed to move outside of the initial region if not constrained so by the use
+        of <code>constraint()</code>.
+      </p>
 
       <p>If <code>rng</code> is not set a new pseudo random generator is created via <code>prng.std()</code>.</p>
 
-      <p>When the algorithm terminates it returns: the current argmin, the current minimum, the violation for the current minimum, the current population matrix (individuals as rows), the vector of evaluations of <code>f</code> corresponding to the current population, vector of violations corresponding to the current population.</p>
+      <p>
+        When the algorithm terminates it returns: the current argmin, the current minimum, the violation for the current minimum, the current population matrix (individuals as
+        rows), the vector of evaluations of <code>f</code> corresponding to the current population, vector of violations corresponding to the current population.
+      </p>
 
-      <p>In this example <code>fmin.de()</code> is used to minimize the 6 dimensional version of the <a href="https://en.wikipedia.org/wiki/Rosenbrock_function">Rosenbrock function</a> which is defined as \( f(\mathbf{x}) = \sum_{i = 1}^{N-1} \left[ \left(1 - x_i \right)^2 + 100 \left(x_{i+1} - x_i^2 \right)^2 \right] \) and has a banana shape (see plot at the end of this page):</p>
+      <p>
+        In this example <code>fmin.de()</code> is used to minimize the 6 dimensional version of the
+        <a href="https://en.wikipedia.org/wiki/Rosenbrock_function">Rosenbrock function</a> which is defined as \( f(\mathbf{x}) = \sum_{i = 1}^{N-1} \left[ \left(1 - x_i
+        \right)^2 + 100 \left(x_{i+1} - x_i^2 \right)^2 \right] \) and has a banana shape (see plot at the end of this page):
+      </p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 -- Load required modules and localize math functions:
 local alg  = require "sci.alg"
 local fmin = require "sci.fmin"
@@ -156,7 +212,6 @@ print("CPU secs  : "..time)
       <p>Plot of the 2 dimensional version:</p>
 
       <img class="img-responsive" src="images/1280px-Rosenbrock_function.png" alt="Rosenbrock function" />
-      
     </div>
 
     <footer class="footer">
@@ -166,14 +221,22 @@ print("CPU secs  : "..time)
     </footer>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
 
-      ga('create', 'UA-53199019-1', 'auto');
-      ga('send', 'pageview');
-
+      ga("create", "UA-53199019-1", "auto");
+      ga("send", "pageview");
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

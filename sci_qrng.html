@@ -1,33 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/custom.css" />
 
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="icon" href="images/favicon.ico" />
 
-    <link rel="stylesheet" href="css/prism-ghcolors.css">
+    <link rel="stylesheet" href="css/prism-ghcolors.css" />
 
     <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
-    <meta name="author" content="Stefano Peluchetti">
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT" />
+    <meta name="author" content="Stefano Peluchetti" />
     <title>SciLua - Sci.QRNG</title>
   </head>
   <body>
-    
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
-            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="index.html">SciLua</a>
         </div>
@@ -69,30 +67,49 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+            <li>
+              <a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
 
     <div class="container-fluid">
-
       <h1>Sci.QRNG: Quasi RNG</h1>
 
-      <p>This module implements quasi random number generators (qrngs), also known as low discrepancy sequence generators. Differently from prngs, which aim to mimic a source of true randomness, qrngs aim to progressively fill a multi-dimensional hypercube \( (0, 1)^d \) in a homogeneous way:</p>
+      <p>
+        This module implements quasi random number generators (qrngs), also known as low discrepancy sequence generators. Differently from prngs, which aim to mimic a source of
+        true randomness, qrngs aim to progressively fill a multi-dimensional hypercube \( (0, 1)^d \) in a homogeneous way:
+      </p>
 
       <table class="table">
-        <tr><th>Name</th><th>States</th><th>Maximum Dimensionality</th></tr>
-        <tr><td><code>sobol</code></td><td><code>2^32-1</code></td><td><code>21201</code></td></tr>
+        <tr>
+          <th>Name</th>
+          <th>States</th>
+          <th>Maximum Dimensionality</th>
+        </tr>
+        <tr>
+          <td><code>sobol</code></td>
+          <td><code>2^32-1</code></td>
+          <td><code>21201</code></td>
+        </tr>
       </table>
 
-      <p>States indicates how many states the qrng can generate. Each state corresponds to a different point in the the d-dimensional hypercube. Samples correspond to the coordinates of this point, so there are d samples for each state. It is an error to generate more states than allowed for any qrng.</p>
+      <p>
+        States indicates how many states the qrng can generate. Each state corresponds to a different point in the the d-dimensional hypercube. Samples correspond to the
+        coordinates of this point, so there are d samples for each state. It is an error to generate more states than allowed for any qrng.
+      </p>
 
-      <p>The dimensionality of each qrng is set automatically without the need of user intervention based on the number of times the <code>rng:sample()</code> function is called between <code>rng:nextstate()</code> invocations. The <code>rng:sample()</code> function must be called <strong>always</strong> the same number of times between <code>rng:nextstate()</code> invocations. It is an error to use a dimensionality higher than the maximum dimensionality allowed for any qrng.</p>
+      <p>
+        The dimensionality of each qrng is set automatically without the need of user intervention based on the number of times the <code>rng:sample()</code> function is called
+        between <code>rng:nextstate()</code> invocations. The <code>rng:sample()</code> function must be called <strong>always</strong> the same number of times between
+        <code>rng:nextstate()</code> invocations. It is an error to use a dimensionality higher than the maximum dimensionality allowed for any qrng.
+      </p>
 
       <p>The following example illustrates the use of the Sobol qrng for the generation of samples over a three-dimensional hypercube:</p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local qrng = require "sci.qrng"
 
 local r = qrng:sobol()
@@ -122,16 +139,27 @@ print(r:sample(), r:sample(), r:sample(), r:sample()) --> error
 
       <h5 class="api">rng:nextstate()</h5>
 
-      <p>Initializes <code>rng</code> to the next (or initial) state. It must be called <strong>before</strong> calling <code>rng:sample()</code>, and not the other way around.</p>
+      <p>
+        Initializes <code>rng</code> to the next (or initial) state. It must be called <strong>before</strong> calling <code>rng:sample()</code>, and not the other way around.
+      </p>
 
       <h5 class="api">u = rng:sample()</h5>
 
-      <p>The i-th call of this function after <code>rng:nextstate()</code> has been called returns the sample corresponding to the i-th dimension for the current state of <code>rng</code> up to its maximum dimension. The sample is guaranteed to belong to the interval (0,1) <strong>extremes excluded</strong>. This function must be called  <strong>always</strong> the same number of times between <code>rng:nextstate()</code> invocations.</p>
+      <p>
+        The i-th call of this function after <code>rng:nextstate()</code> has been called returns the sample corresponding to the i-th dimension for the current state of
+        <code>rng</code> up to its maximum dimension. The sample is guaranteed to belong to the interval (0,1) <strong>extremes excluded</strong>. This function must be called
+        <strong>always</strong> the same number of times between <code>rng:nextstate()</code> invocations.
+      </p>
 
       <h5 class="api">rng = prng.sobol()</h5>
 
-      <p>Returns a qrng based on the Sobol algorithm. The primitive polynomials, the initial direction numbers and the implementation for generating Sobol sequences are based on the <a href="https://web.maths.unsw.edu.au/~fkuo/sobol/">S. Joe and F. Y. Kuo project</a> to which we refer for further information on this qrng. More specifically the set of direction numbers based on search criterion \( D^{(6)} \) is used which allows for the generation of samples up to dimension 21201. It should be noted that this LuaJIT port is not endorsed in any way by these authors nor did they participate in its development. Also notice that in our implementation we discard the initial state which corresponds to samples with value 0.</p>
-      
+      <p>
+        Returns a qrng based on the Sobol algorithm. The primitive polynomials, the initial direction numbers and the implementation for generating Sobol sequences are based on
+        the <a href="https://web.maths.unsw.edu.au/~fkuo/sobol/">S. Joe and F. Y. Kuo project</a> to which we refer for further information on this qrng. More specifically the
+        set of direction numbers based on search criterion \( D^{(6)} \) is used which allows for the generation of samples up to dimension 21201. It should be noted that this
+        LuaJIT port is not endorsed in any way by these authors nor did they participate in its development. Also notice that in our implementation we discard the initial state
+        which corresponds to samples with value 0.
+      </p>
     </div>
 
     <footer class="footer">
@@ -141,14 +169,22 @@ print(r:sample(), r:sample(), r:sample(), r:sample()) --> error
     </footer>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
 
-      ga('create', 'UA-53199019-1', 'auto');
-      ga('send', 'pageview');
-
+      ga("create", "UA-53199019-1", "auto");
+      ga("send", "pageview");
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

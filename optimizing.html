@@ -1,33 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/custom.css" />
 
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="icon" href="images/favicon.ico" />
 
-    <link rel="stylesheet" href="css/prism-ghcolors.css">
+    <link rel="stylesheet" href="css/prism-ghcolors.css" />
 
     <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
-    <meta name="author" content="Stefano Peluchetti">
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT" />
+    <meta name="author" content="Stefano Peluchetti" />
     <title>SciLua - Optimizing</title>
   </head>
   <body>
-    
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
-            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="index.html">SciLua</a>
         </div>
@@ -69,40 +67,55 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+            <li>
+              <a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
 
     <div class="container-fluid">
-
       <h1>Optimizing Performance</h1>
 
-      <p>LuaJIT produces very efficient compiled code in most cases with no tuning required. That said, the <a href="http://wiki.luajit.org/Numerical-Computing-Performance-Guide">numerical computing performance guide</a> contains guidelines that it's best to keep in mind if the algorithm's performance is critical.</p>
+      <p>
+        LuaJIT produces very efficient compiled code in most cases with no tuning required. That said, the
+        <a href="http://wiki.luajit.org/Numerical-Computing-Performance-Guide">numerical computing performance guide</a> contains guidelines that it's best to keep in mind if
+        the algorithm's performance is critical.
+      </p>
 
-      <p>If performance turns out to be unsatisfactory the first step is to investigate the cause of the problem. The easiest way to do so is to run again the problematic code with the <code>-jv</code> flag which displays information about the progress of the JIT compiler:</p>
+      <p>
+        If performance turns out to be unsatisfactory the first step is to investigate the cause of the problem. The easiest way to do so is to run again the problematic code
+        with the <code>-jv</code> flag which displays information about the progress of the JIT compiler:
+      </p>
 
-<pre><code class="language-bash">
+      <pre><code class="language-bash">
 lua -jv problematic_script.lua
 </code></pre>
 
       <p>The problematic spots will be marked by <code>"fallback to interpreter"</code> preceded by hints about the issue.</p>
 
-      <p>Additionally, LuaJIT 2.1 bundles a <a href="https://repo.or.cz/w/luajit-2.0.git/blob_plain/v2.1:/doc/ext_profiler.html">profiler</a> which can be used to identify where most of the computational effort is spent and optimize the code accordingly. The profiler is activated by the <code>-jp</code> flag (multiple profiling options are available via <code>-jp=...</code>):</p>
+      <p>
+        Additionally, LuaJIT 2.1 bundles a <a href="https://repo.or.cz/w/luajit-2.0.git/blob_plain/v2.1:/doc/ext_profiler.html">profiler</a> which can be used to identify where
+        most of the computational effort is spent and optimize the code accordingly. The profiler is activated by the <code>-jp</code> flag (multiple profiling options are
+        available via <code>-jp=...</code>):
+      </p>
 
-<pre><code class="language-bash">
+      <pre><code class="language-bash">
 lua -jp problematic_script.lua
 </code></pre>
 
-      <p>Finally, LuaJIT uses a probabilistic approach to make decisions regarding how to compile (or not) chunks of code. Occasionally it might be required to tune the optimization parameters affecting this probabilistic approach. If everything else fails, It is suggested to try moderately increasing the <code>-Oloopunroll</code> and <code>-Ocallunroll</code> limits, especially when hinted so by the output of <code>lua -jv</code>, and check whether this solves the issue:</p>
+      <p>
+        Finally, LuaJIT uses a probabilistic approach to make decisions regarding how to compile (or not) chunks of code. Occasionally it might be required to tune the
+        optimization parameters affecting this probabilistic approach. If everything else fails, It is suggested to try moderately increasing the <code>-Oloopunroll</code> and
+        <code>-Ocallunroll</code> limits, especially when hinted so by the output of <code>lua -jv</code>, and check whether this solves the issue:
+      </p>
 
-<pre><code class="language-bash">
+      <pre><code class="language-bash">
 lua -Oloopunroll=60 problematic_script.lua
 </code></pre>
 
       <p>All of LuaJIT optimization settings can be changed via the <code>-O</code> flag as explained in the <a href="https://luajit.org/running.html">LuaJIT manual</a>.</p>
-
     </div>
 
     <footer class="footer">
@@ -112,14 +125,22 @@ lua -Oloopunroll=60 problematic_script.lua
     </footer>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
 
-      ga('create', 'UA-53199019-1', 'auto');
-      ga('send', 'pageview');
-
+      ga("create", "UA-53199019-1", "auto");
+      ga("send", "pageview");
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

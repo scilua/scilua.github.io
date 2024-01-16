@@ -1,33 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/custom.css" />
 
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="icon" href="images/favicon.ico" />
 
-    <link rel="stylesheet" href="css/prism-ghcolors.css">
+    <link rel="stylesheet" href="css/prism-ghcolors.css" />
 
     <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
-    <meta name="author" content="Stefano Peluchetti">
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT" />
+    <meta name="author" content="Stefano Peluchetti" />
     <title>SciLua - Sci.Math</title>
   </head>
   <body>
-    
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
-            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="index.html">SciLua</a>
         </div>
@@ -69,72 +67,79 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+            <li>
+              <a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
 
     <div class="container-fluid">
-
       <h1>Sci.Math: Special Math Functions</h1>
 
-      <p>This module extends the <code>math</code> module of the standard Lua distribution (meaning that it's guaranteed to include everything which is in it) by adding the special mathematical functions listed below. In the following we always refer to <code>math</code> for <code>sci.math</code>. It is always preferable to select the most specialized function for any task, for instance by calling <code>math.loggamma()</code> instead of <code>math.log(math.gamma())</code>.</p>
-    
+      <p>
+        This module extends the <code>math</code> module of the standard Lua distribution (meaning that it's guaranteed to include everything which is in it) by adding the
+        special mathematical functions listed below. In the following we always refer to <code>math</code> for <code>sci.math</code>. It is always preferable to select the most
+        specialized function for any task, for instance by calling <code>math.loggamma()</code> instead of <code>math.log(math.gamma())</code>.
+      </p>
+
       <h2>API</h2>
 
       <h5 class="api">v = math.gamma(x)</h5>
-        
-      <p>Gamma function, defined as: 
-      $$ \Gamma(x) = \int_{0}^{\infty}e^{-t}t^{x-1}dt $$ 
-      where <code>x</code> must be different from 0 and any negative integer.</p>
-        
+
+      <p>Gamma function, defined as: $$ \Gamma(x) = \int_{0}^{\infty}e^{-t}t^{x-1}dt $$ where <code>x</code> must be different from 0 and any negative integer.</p>
+
       <h5 class="api">v = math.loggamma(x)</h5>
-        
-      <p>Natural logarithm of the the absolute value of gamma function (the absolute value is relevant only for negative <code>x</code>). The domain of this function is the same of the gamma function.</p>
-      
+
+      <p>
+        Natural logarithm of the the absolute value of gamma function (the absolute value is relevant only for negative <code>x</code>). The domain of this function is the same
+        of the gamma function.
+      </p>
+
       <h5 class="api">v = math.beta(x, y)</h5>
-        
-      <p>Beta function, defined as: 
-      $$ \text{B}(x, y) = \frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)} $$ 
-      where <code>x</code> and <code>y</code> must be strictly positive.</p>
+
+      <p>Beta function, defined as: $$ \text{B}(x, y) = \frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)} $$ where <code>x</code> and <code>y</code> must be strictly positive.</p>
 
       <h5 class="api">v = math.logbeta(x, y)</h5>
-        
+
       <p>Natural logarithm of the beta function. The domain of this function is the same of the beta function.</p>
-      
+
       <h5 class="api">v = math.phi(x)</h5>
-        
-      <p>Phi function, or cumulative distribution function of a standard normal random variable, defined as: 
-      $$ \Phi(x) = \int_{-\infty}^{x}\frac{1}{\sqrt{2\pi}}\exp{\{-\frac{t^2}{2}\}}dt $$ 
-      for any <code>x</code>.</p>
-      
+
+      <p>
+        Phi function, or cumulative distribution function of a standard normal random variable, defined as: $$ \Phi(x) =
+        \int_{-\infty}^{x}\frac{1}{\sqrt{2\pi}}\exp{\{-\frac{t^2}{2}\}}dt $$ for any <code>x</code>.
+      </p>
+
       <h5 class="api">v = math.iphi(x)</h5>
-        
-      <p>Mathematical inverse of the Phi function, or quantile function of a standard normal random variable: 
-      $$ (I\Phi)(x) = \Phi^{-1}(x) $$ 
-      where <code>x</code> is between 0 and 1 (extremes included).</p>
-      
+
+      <p>
+        Mathematical inverse of the Phi function, or quantile function of a standard normal random variable: $$ (I\Phi)(x) = \Phi^{-1}(x) $$ where <code>x</code> is between 0
+        and 1 (extremes included).
+      </p>
+
       <h5 class="api">v = math.step(x)</h5>
-        
-      <p>Step function, defined as: 
-      $$\begin{eqnarray} step(x) = \left\{ \begin{array}{ll} 1 & x \geq 0 \\ 0 & x \lt 0 \end{array} \right. \end{eqnarray} $$
-      </p>
-      
+
+      <p>Step function, defined as: $$\begin{eqnarray} step(x) = \left\{ \begin{array}{ll} 1 & x \geq 0 \\ 0 & x \lt 0 \end{array} \right. \end{eqnarray} $$</p>
+
       <h5 class="api">v = math.sign(x)</h5>
-        
-      <p>Sign function, defined as: 
-      $$\begin{eqnarray} sign(x) = \left\{ \begin{array}{ll} +1 & x \geq 0 \\ -1 & x \lt 0 \end{array} \right. \end{eqnarray} $$
-      </p>
-      
+
+      <p>Sign function, defined as: $$\begin{eqnarray} sign(x) = \left\{ \begin{array}{ll} +1 & x \geq 0 \\ -1 & x \lt 0 \end{array} \right. \end{eqnarray} $$</p>
+
       <h5 class="api">v = math.round(x)</h5>
-        
+
       <p>Round function, round <code>x</code> to the closest integer. Halfway cases are rounded away from zero regardless of the sign.</p>
-        
+
       <h5 class="api">math.generic</h5>
-        
-      <p>This table contains the same keys of <code>math</code> (this module). The mathematical functions defined in <code>math.generic</code> call the corresponding functions in <code>math</code> whenever all the arguments are Lua numbers. When this is not the case the following rules apply. For function of 1 argument the member function with the same name gets called with the object as single argument. For functions of 2 arguments the same happens and order of the arguments is preserved (the 1st argument might be a Lua number if the second is not). For <code>max(), min()</code> which accept a variable number of arguments a recursive version is implemented which calls the <code>:max(), :min()</code> member functions with 2 arguments only.</p>
-      
+
+      <p>
+        This table contains the same keys of <code>math</code> (this module). The mathematical functions defined in <code>math.generic</code> call the corresponding functions
+        in <code>math</code> whenever all the arguments are Lua numbers. When this is not the case the following rules apply. For function of 1 argument the member function
+        with the same name gets called with the object as single argument. For functions of 2 arguments the same happens and order of the arguments is preserved (the 1st
+        argument might be a Lua number if the second is not). For <code>max(), min()</code> which accept a variable number of arguments a recursive version is implemented which
+        calls the <code>:max(), :min()</code> member functions with 2 arguments only.
+      </p>
     </div>
 
     <footer class="footer">
@@ -144,14 +149,22 @@
     </footer>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
 
-      ga('create', 'UA-53199019-1', 'auto');
-      ga('send', 'pageview');
-
+      ga("create", "UA-53199019-1", "auto");
+      ga("send", "pageview");
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

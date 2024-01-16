@@ -1,33 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/custom.css" />
 
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="icon" href="images/favicon.ico" />
 
-    <link rel="stylesheet" href="css/prism-ghcolors.css">
+    <link rel="stylesheet" href="css/prism-ghcolors.css" />
 
     <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
-    <meta name="author" content="Stefano Peluchetti">
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT" />
+    <meta name="author" content="Stefano Peluchetti" />
     <title>SciLua - Xsys</title>
   </head>
   <body>
-    
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
-            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="index.html">SciLua</a>
         </div>
@@ -69,14 +67,15 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+            <li>
+              <a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
 
     <div class="container-fluid">
-
       <h1>Xsys: Extended Lua System</h1>
 
       <p>A module that provides a small number of general purpose routines and extends the global <code>table</code> and <code>string</code> modules.</p>
@@ -93,9 +92,12 @@
 
       <h5 class="api">templatef = xsys.template(str)</h5>
 
-      <p>This function is <code>templet.loadstring()</code> from <a href="https://colberg.org/lua-templet/">Peter Colberg's Templet library</a> which is embedded in this module (version 1.0.1). We refer to the official website for further documentation. Here is an example of dynamic C-code generation:</p>
+      <p>
+        This function is <code>templet.loadstring()</code> from <a href="https://colberg.org/lua-templet/">Peter Colberg's Templet library</a> which is embedded in this module
+        (version 1.0.1). We refer to the official website for further documentation. Here is an example of dynamic C-code generation:
+      </p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local dynamic = xsys.template[[
 for (int i = 0; i < ${nparticle}; ++i) {
 |for i = 1, #coord do
@@ -115,7 +117,7 @@ print(dynamic({ coord = { "x", "y", "z" }, nparticle = 500, timestep = 0.001 }))
 
       <p>On success, this function is equivalent to executing the following chunk of code:</p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local f = loadstring(chunk, chunkname)
 if fenv then
   setfenv(f, fenv)
@@ -129,13 +131,13 @@ return f()
 
       <p>This function is equivalent to executing the following chunk of code:</p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local v1, v2, ..., vN = t.k1, t.k2, ..., t.kN
 </code></pre>
 
       <p>The advantage is purely cosmetic as using this function it's possible to easily 'import' module variables by copy&amp;paste:</p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local exp, log, sqrt, cos, sin, min, max, sqrt = xsys.from(math, 
      "exp, log, sqrt, cos, sin, min, max, sqrt")
 </code></pre>
@@ -148,9 +150,12 @@ local exp, log, sqrt, cos, sin, min, max, sqrt = xsys.from(math,
 
       <h5 class="api">newtable = xsys.table.union(...)</h5>
 
-      <p>All passed arguments must be tables (passing no arguments is allowed). Returns a new table which maps from the union of the keys, which must be unique among all passed arguments, to the corresponding values. The keys of each of the passed arguments are iterated via <code>pairs()</code>. Example:</p>
+      <p>
+        All passed arguments must be tables (passing no arguments is allowed). Returns a new table which maps from the union of the keys, which must be unique among all passed
+        arguments, to the corresponding values. The keys of each of the passed arguments are iterated via <code>pairs()</code>. Example:
+      </p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local t = table.union({ a = 1, b = 2 }, { [8] = "red", [9] = "blue" })
 for k,v in pairs(t) do print(k, v) end
 --> b 2
@@ -161,9 +166,13 @@ for k,v in pairs(t) do print(k, v) end
 
       <h5 class="api">newarray = xsys.table.append(...)</h5>
 
-      <p>All the passed arguments must be table arrays, i.e. a table for which all the values from <code>1</code> to the result of the <code>#</code> operator are not <code>nil</code> (passing no arguments is allowed). Returns a new table array which is constructed by appending all the values corresponding to the array part of all the passed arguments which are iterated via the indexing <code>[i]</code> and length <code>#</code> operators. Example:</p>
+      <p>
+        All the passed arguments must be table arrays, i.e. a table for which all the values from <code>1</code> to the result of the <code>#</code> operator are not
+        <code>nil</code> (passing no arguments is allowed). Returns a new table array which is constructed by appending all the values corresponding to the array part of all
+        the passed arguments which are iterated via the indexing <code>[i]</code> and length <code>#</code> operators. Example:
+      </p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local t = table.append({ 1, 2, 3, a = 1 }, { 4, 5 })
 for _,v in ipairs(t) do print(v) end
 --> 1
@@ -182,7 +191,7 @@ print(t.a) --> nil
 
       <p>Splits the string <code>str</code> into the table array <code>splitted</code> according to the separator <code>sep</code>. Example:</p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 for _,v in ipairs(xsys.string.split("aa,bb,cc,dd", ",")) do 
   print(v) 
 end
@@ -196,17 +205,22 @@ end
 
       <p>Removes any sequence of white-spaces from the beginning and from the end of <code>str</code>. Example:</p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local totrim = "  LuaJIT "
-print("<"..totrim..">")                   --> <  LuaJIT >
-print("<"..xsys.string.trim(totrim)..">") --> <LuaJIT>
+print("["..totrim.."]")                   --> [  LuaJIT ]
+print("["..xsys.string.trim(totrim).."]") --> [LuaJIT]
 </code></pre>
 
       <h5 class="api">fixstr = xsys.string.width(x, nchars = 9)</h5>
 
-      <p>Returns a string with a fixed length equal to <code>nchars</code> characters (at least <code>9</code>) representing <code>x</code> which must be of one of the following: a <code>nil</code>, a <code>boolean</code>, a <code>string</code>, a <code>number</code>, or either a <code>table</code> or an FFI <code>cdata</code> with a <code>__tostring()</code> member method defined which returns a <code>number</code>. The fixed length is achieved via right-justification or truncation depending on the case. The rules that determine the output are best illustrated via an example:</p>
+      <p>
+        Returns a string with a fixed length equal to <code>nchars</code> characters (at least <code>9</code>) representing <code>x</code> which must be of one of the
+        following: a <code>nil</code>, a <code>boolean</code>, a <code>string</code>, a <code>number</code>, or either a <code>table</code> or an FFI <code>cdata</code> with a
+        <code>__tostring()</code> member method defined which returns a <code>number</code>. The fixed length is achieved via right-justification or truncation depending on the
+        case. The rules that determine the output are best illustrated via an example:
+      </p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local width = xsys.string.width
 -- Nil
 print(width())
@@ -243,7 +257,6 @@ print(width(0/0))
 -->      -inf
 -->       nan
 </code></pre>
-      
     </div>
 
     <footer class="footer">
@@ -253,14 +266,22 @@ print(width(0/0))
     </footer>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
 
-      ga('create', 'UA-53199019-1', 'auto');
-      ga('send', 'pageview');
-
+      ga("create", "UA-53199019-1", "auto");
+      ga("send", "pageview");
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

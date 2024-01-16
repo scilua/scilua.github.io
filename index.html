@@ -1,33 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/custom.css" />
 
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="icon" href="images/favicon.ico" />
 
-    <link rel="stylesheet" href="css/prism-ghcolors.css">
+    <link rel="stylesheet" href="css/prism-ghcolors.css" />
 
     <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-    <meta name="description" content="SciLua: Scientific Computing with LuaJIT">
-    <meta name="author" content="Stefano Peluchetti">
+    <meta name="description" content="SciLua: Scientific Computing with LuaJIT" />
+    <meta name="author" content="Stefano Peluchetti" />
     <title>SciLua</title>
   </head>
   <body>
-    
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topnavbar">
-            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> 
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="index.html">SciLua</a>
         </div>
@@ -69,24 +67,36 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a></li>
+            <li>
+              <a href="contact.html"><i class="fa fa-envelope-o"></i> Contact</a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
 
     <div class="container-fluid">
-
       <h1>SciLua: Scientific Computing with LuaJIT</h1>
 
-      <p>A complete framework for numerical computing based on LuaJIT which combines the <strong>ease of use</strong> of scripting languages (MATLAB, R, ...) with the <strong>high performance</strong> of compiled languages (C/C++, Fortran, ...).</p>
+      <p>
+        A complete framework for numerical computing based on LuaJIT which combines the <strong>ease of use</strong> of scripting languages (MATLAB, R, ...) with the
+        <strong>high performance</strong> of compiled languages (C/C++, Fortran, ...).
+      </p>
 
       <div class="row">
         <div class="col-sm-6">
-          <p><a href="https://www.lua.org/about.html"><strong>Lua</strong></a> is a dynamic language characterized by a small number of simple but powerful concepts that allow to easily implement complex algorithms. Lua is fast to learn thanks to its high-level nature, to the concise syntax and to the precise documentation. Lua is a proven robust language that offers both object-oriented and functional programming features.</p>
+          <p>
+            <a href="https://www.lua.org/about.html"><strong>Lua</strong></a> is a dynamic language characterized by a small number of simple but powerful concepts that allow
+            to easily implement complex algorithms. Lua is fast to learn thanks to its high-level nature, to the concise syntax and to the precise documentation. Lua is a
+            proven robust language that offers both object-oriented and functional programming features.
+          </p>
         </div>
         <div class="col-sm-6">
-          <p><a href="https://luajit.org/luajit.html"><strong>LuaJIT</strong></a> is an extremely optimized Just In Time compiler for Lua. Start-up and warm-up times are negligible, compile times are in the microsecond to millisecond range and the typical performance of compiled LuaJIT programs is close to the one of C/C++. LuaJIT includes the <a href="https://luajit.org/ext_ffi.html">FFI library</a> which allows to call C function directly.</p>
+          <p>
+            <a href="https://luajit.org/luajit.html"><strong>LuaJIT</strong></a> is an extremely optimized Just In Time compiler for Lua. Start-up and warm-up times are
+            negligible, compile times are in the microsecond to millisecond range and the typical performance of compiled LuaJIT programs is close to the one of C/C++. LuaJIT
+            includes the <a href="https://luajit.org/ext_ffi.html">FFI library</a> which allows to call C function directly.
+          </p>
         </div>
       </div>
 
@@ -94,7 +104,10 @@
 
       <img class="img-responsive" src="images/results_norm.png" alt="Benchmark Plot" />
 
-      <p>The figure above compares the running time required (lower is better) to run the <a href="https://julialang.org">Julia</a> <a href="https://github.com/JuliaLang/julia/tree/master/test/perf/micro">benchmark suite</a>. Timings are relative to the C implementation.</p>
+      <p>
+        The figure above compares the running time required (lower is better) to run the <a href="https://julialang.org">Julia</a>
+        <a href="https://github.com/JuliaLang/julia/tree/master/test/perf/micro">benchmark suite</a>. Timings are relative to the C implementation.
+      </p>
 
       <p>The details: Linux x64 / gcc 5.2.1 / Julia 0.4.1 / SciLua 1.0 latest, implementation: <a href="download/perf-v1.2.sci.lua">perf-v1.2.sci.lua</a>.</p>
 
@@ -104,38 +117,84 @@
 
       <p>Having installed (i.e. unzipped) ULua, execute:</p>
 
-<pre><code class="language-bash">
+      <pre><code class="language-bash">
 ulua/bin/upkg add sci        # Install the sci package (SciLua).
 ulua/bin/upkg add sci-lang   # Install the sci-lang package (SciLua syntax extensions).
 </code></pre>
 
       <p>This is the suggested way as all dependencies are handled by the package manager and SciLua can be kept up to date using <code>upkg update</code>.</p>
 
-      <p>Alternatively, it is possible to install SciLua manually. Download and unzip <a github-release="https://api.github.com/repos/stepelu/lua-sci/tags" onclick="ga('send', 'event', 'download', 'binary', 'sci')">sci~latest.zip</a> and <a github-release="https://api.github.com/repos/stepelu/lua-sci-lang/tags" onclick="ga('send', 'event', 'download', 'binary', 'sci-lang')">sci-lang~latest.zip</a> into folders named respectively <code>sci</code> and <code>sci-lang</code> and make sure that such modules can be found by LuaJIT (check <code>package.path</code> documentation). Notice that SciLua requires <a href="https://github.com/stepelu/lua-xsys">xsys</a> and <a href="https://www.openblas.net/">OpenBLAS</a> to be installed as well.</p>
+      <p>
+        Alternatively, it is possible to install SciLua manually. Download and unzip
+        <a github-release="https://api.github.com/repos/stepelu/lua-sci/tags" onclick="ga('send', 'event', 'download', 'binary', 'sci')">sci~latest.zip</a> and
+        <a github-release="https://api.github.com/repos/stepelu/lua-sci-lang/tags" onclick="ga('send', 'event', 'download', 'binary', 'sci-lang')">sci-lang~latest.zip</a> into
+        folders named respectively <code>sci</code> and <code>sci-lang</code> and make sure that such modules can be found by LuaJIT (check
+        <code>package.path</code> documentation). Notice that SciLua requires <a href="https://github.com/stepelu/lua-xsys">xsys</a> and
+        <a href="https://www.openblas.net/">OpenBLAS</a> to be installed as well.
+      </p>
 
-      <h2>Sci Library</h2> 
+      <h2>Sci Library</h2>
 
       <p>The <code>sci</code> package contains a general purpose scientific computing library composed of the following modules:</p>
 
       <table class="table">
-        <tr><th>Sub-Module</th><th>Description</th></tr>
-        <tr><td><a href="sci_alg.html">sci.alg</a></td><td>vector and matrix algebra</td></tr>
-        <tr><td><a href="sci_diff.html">sci.diff</a></td><td>automatic differentiation</td></tr>
-        <tr><td><a href="sci_dist.html">sci.dist</a></td><td>statistical distributions</td></tr>
-        <tr><td><a href="sci_fminfmax.html">sci.fmin</a></td><td>function minimization algorithms</td></tr>
-        <tr><td><a href="sci_fminfmax.html">sci.fmax</a></td><td>function maximization algorithms</td></tr>
-        <tr><td><a href="sci_math.html">sci.math</a></td><td>special mathematical functions</td></tr>
-        <tr><td><a href="sci_mcmc.html">sci.mcmc</a></td><td>MCMC algorithms</td></tr>
-        <tr><td><a href="sci_prng.html">sci.prng</a></td><td>pseudo random number generators</td></tr>
-        <tr><td><a href="sci_qrng.html">sci.qrng</a></td><td>quasi random number generators</td></tr>
-        <tr><td><a href="sci_quad.html">sci.quad</a></td><td>quadrature algorithms</td></tr>
-        <tr><td><a href="sci_root.html">sci.root</a></td><td>root-finding algorithms</td></tr>
-        <tr><td><a href="sci_stat.html">sci.stat</a></td><td>statistical functions</td></tr>
+        <tr>
+          <th>Sub-Module</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><a href="sci_alg.html">sci.alg</a></td>
+          <td>vector and matrix algebra</td>
+        </tr>
+        <tr>
+          <td><a href="sci_diff.html">sci.diff</a></td>
+          <td>automatic differentiation</td>
+        </tr>
+        <tr>
+          <td><a href="sci_dist.html">sci.dist</a></td>
+          <td>statistical distributions</td>
+        </tr>
+        <tr>
+          <td><a href="sci_fminfmax.html">sci.fmin</a></td>
+          <td>function minimization algorithms</td>
+        </tr>
+        <tr>
+          <td><a href="sci_fminfmax.html">sci.fmax</a></td>
+          <td>function maximization algorithms</td>
+        </tr>
+        <tr>
+          <td><a href="sci_math.html">sci.math</a></td>
+          <td>special mathematical functions</td>
+        </tr>
+        <tr>
+          <td><a href="sci_mcmc.html">sci.mcmc</a></td>
+          <td>MCMC algorithms</td>
+        </tr>
+        <tr>
+          <td><a href="sci_prng.html">sci.prng</a></td>
+          <td>pseudo random number generators</td>
+        </tr>
+        <tr>
+          <td><a href="sci_qrng.html">sci.qrng</a></td>
+          <td>quasi random number generators</td>
+        </tr>
+        <tr>
+          <td><a href="sci_quad.html">sci.quad</a></td>
+          <td>quadrature algorithms</td>
+        </tr>
+        <tr>
+          <td><a href="sci_root.html">sci.root</a></td>
+          <td>root-finding algorithms</td>
+        </tr>
+        <tr>
+          <td><a href="sci_stat.html">sci.stat</a></td>
+          <td>statistical functions</td>
+        </tr>
       </table>
 
       <p>Each sub-module has to be loaded separately (<code>require 'sci'</code> is not allowed):</p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 -- No global key is set:
 local alg  = require "sci.alg"  -- Load sci.alg module.
 local dist = require "sci.dist" -- Load sci.dist module.
@@ -143,7 +202,10 @@ local dist = require "sci.dist" -- Load sci.dist module.
 
       <h2>Sci Syntax Extensions</h2>
 
-      <p>Based on the <a href="https://github.com/franko/luajit-lang-toolkit">LuaJIT Language Toolkit</a>, the <code>sci-lang</code> package contains the <code>scilua</code> executable which extends the syntax of LuaJIT for easier linear algebra operations:</p>
+      <p>
+        Based on the <a href="https://github.com/franko/luajit-lang-toolkit">LuaJIT Language Toolkit</a>, the <code>sci-lang</code> package contains the
+        <code>scilua</code> executable which extends the syntax of LuaJIT for easier linear algebra operations:
+      </p>
 
       <ul>
         <li>algebra expressions constructed via empty bracket <code>[]</code> indexing</li>
@@ -157,7 +219,7 @@ local dist = require "sci.dist" -- Load sci.dist module.
 
       <p>For example, the <code>rand_mat_stat</code> benchmark shown above is implemented as:</p>
 
-<pre><code class="language-lua">
+      <pre><code class="language-lua">
 local function randmatstat(t)
   local n = 5
   local v, w = alg.vec(t), alg.vec(t)
@@ -171,7 +233,6 @@ local function randmatstat(t)
   return sqrt(stat.var(v))/stat.mean(v), sqrt(stat.var(w))/stat.mean(w)
 end
 </code></pre>
-
     </div>
 
     <footer class="footer">
@@ -181,14 +242,22 @@ end
     </footer>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
 
-      ga('create', 'UA-53199019-1', 'auto');
-      ga('send', 'pageview');
-
+      ga("create", "UA-53199019-1", "auto");
+      ga("send", "pageview");
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
